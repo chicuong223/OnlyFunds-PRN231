@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlyFundsAPI.BusinessObjects;
 
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(OnlyFundsDBContext))]
-    partial class OnlyFundsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220527043500_AddReport")]
+    partial class AddReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,22 +162,6 @@ namespace BusinessObjects.Migrations
                     b.HasIndex("ReceiverID");
 
                     b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserID", "Code");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("OTPs");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
@@ -473,17 +459,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Receiver");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.User", "User")
-                        .WithOne("OTP")
-                        .HasForeignKey("OnlyFundsAPI.BusinessObjects.OTP", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
                 {
                     b.HasOne("OnlyFundsAPI.BusinessObjects.User", "Uploader")
@@ -573,8 +548,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Followers");
 
                     b.Navigation("Follows");
-
-                    b.Navigation("OTP");
 
                     b.Navigation("Posts");
                 });

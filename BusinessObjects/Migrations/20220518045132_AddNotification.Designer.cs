@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlyFundsAPI.BusinessObjects;
 
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(OnlyFundsDBContext))]
-    partial class OnlyFundsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220518045132_AddNotification")]
+    partial class AddNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,11 +28,6 @@ namespace BusinessObjects.Migrations
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("PostID", "UserID");
 
@@ -99,20 +96,20 @@ namespace BusinessObjects.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("money");
 
+                    b.Property<int>("DonatedID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DonationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DonatorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("PostID")
-                        .HasColumnType("int");
-
                     b.HasKey("DonationID");
 
-                    b.HasIndex("DonatorID");
+                    b.HasIndex("DonatedID");
 
-                    b.HasIndex("PostID");
+                    b.HasIndex("DonatorID");
 
                     b.ToTable("Donations");
                 });
@@ -162,22 +159,6 @@ namespace BusinessObjects.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserID", "Code");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("OTPs");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
                 {
                     b.Property<int>("PostID")
@@ -185,21 +166,17 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<int>("AttachmentType")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
-
-                    b.Property<string>("Preview")
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)");
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -277,41 +254,6 @@ namespace BusinessObjects.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("PostLikes");
-                });
-
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Report", b =>
-                {
-                    b.Property<int>("ReporterID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("ReportID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReportTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReportType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReportedObjectID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.HasKey("ReporterID");
-
-                    b.HasIndex("ReporterID", "ReportedObjectID", "ReportType")
-                        .IsUnique();
-
-                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.User", b =>
@@ -426,21 +368,21 @@ namespace BusinessObjects.Migrations
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Donation", b =>
                 {
+                    b.HasOne("OnlyFundsAPI.BusinessObjects.User", "DonatedUser")
+                        .WithMany()
+                        .HasForeignKey("DonatedID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("OnlyFundsAPI.BusinessObjects.User", "Donator")
                         .WithMany()
                         .HasForeignKey("DonatorID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.Navigation("DonatedUser");
 
                     b.Navigation("Donator");
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Follow", b =>
@@ -471,17 +413,6 @@ namespace BusinessObjects.Migrations
                         .IsRequired();
 
                     b.Navigation("Receiver");
-                });
-
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.User", "User")
-                        .WithOne("OTP")
-                        .HasForeignKey("OnlyFundsAPI.BusinessObjects.OTP", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
@@ -537,17 +468,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Report", b =>
-                {
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.User", "Reporter")
-                        .WithMany()
-                        .HasForeignKey("ReporterID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reporter");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Comment", b =>
                 {
                     b.Navigation("Likes");
@@ -573,8 +493,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Followers");
 
                     b.Navigation("Follows");
-
-                    b.Navigation("OTP");
 
                     b.Navigation("Posts");
                 });

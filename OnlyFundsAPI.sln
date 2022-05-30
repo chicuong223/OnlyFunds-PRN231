@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{90665890-2BC0-433D-919E-EEF22A0CBBB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{B812DA32-C7CB-4BD5-AEA1-F3D08482ABF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{90665890-2BC0-433D-919E-EEF22A0CBBB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90665890-2BC0-433D-919E-EEF22A0CBBB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90665890-2BC0-433D-919E-EEF22A0CBBB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B812DA32-C7CB-4BD5-AEA1-F3D08482ABF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B812DA32-C7CB-4BD5-AEA1-F3D08482ABF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B812DA32-C7CB-4BD5-AEA1-F3D08482ABF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B812DA32-C7CB-4BD5-AEA1-F3D08482ABF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

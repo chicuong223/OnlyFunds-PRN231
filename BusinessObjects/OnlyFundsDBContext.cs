@@ -20,6 +20,8 @@ namespace OnlyFundsAPI.BusinessObjects
         public DbSet<PostCategoryMap> PostCategoryMaps { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Donation> Donations { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<OTP> OTPs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -73,10 +75,12 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.Property(post => post.Description)
                     .HasMaxLength(3000);
-                entity.Property(post => post.Active)
-                    .HasDefaultValue(true);
+                entity.Property(post => post.Status)
+                    .HasDefaultValue(PostStatus.Active);
                 entity.Property(post => post.UploadTime)
                     .IsRequired();
+                entity.Property(post => post.Preview)
+                    .HasMaxLength(1500);
             });
 
             builder.Entity<Comment>(entity =>
@@ -155,9 +159,9 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.Property(donation => donation.DonationTime)
                     .IsRequired();
-                entity.HasOne(donation => donation.DonatedUser)
+                entity.HasOne(donation => donation.Post)
                     .WithMany()
-                    .HasForeignKey(donation => donation.DonatedID)
+                    .HasForeignKey(donation => donation.PostID)
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
                 entity.HasOne(donation => donation.Donator)
@@ -193,6 +197,56 @@ namespace OnlyFundsAPI.BusinessObjects
                 entity.HasOne(b => b.Post)
                     .WithMany(post => post.Bookmarks)
                     .HasForeignKey(b => b.PostID)
+                    .IsRequired();
+                entity.Property(b => b.Description)
+                    .IsRequired()
+                    .HasMaxLength(500);
+            });
+
+            builder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(noti => noti.NotificationID);
+                entity.HasOne(noti => noti.Receiver)
+                    .WithMany()
+                    .HasForeignKey(noti => noti.ReceiverID)
+                    .IsRequired();
+                entity.Property(noti => noti.Content)
+                    .HasMaxLength(3000)
+                    .IsRequired();
+                entity.Property(noti => noti.IsRead)
+                    .HasDefaultValue(false);
+                entity.Property(noti => noti.NotificationTime)
+                    .IsRequired();
+            });
+
+            builder.Entity<Report>(entity =>
+            {
+                entity.HasKey(report => report.ReporterID);
+                entity.HasIndex(report => new { report.ReporterID, report.ReportedObjectID, report.ReportType })
+                    .IsUnique();
+                entity.Property(report => report.ReportedObjectID)
+                    .IsRequired();
+                entity.Property(report => report.ReportType)
+                    .IsRequired();
+                entity.HasOne(report => report.Reporter)
+                    .WithMany()
+                    .HasForeignKey(report => report.ReporterID)
+                    .IsRequired();
+                entity.Property(report => report.Description)
+                    .IsRequired()
+                    .HasMaxLength(1000);
+                entity.Property(report => report.Status)
+                    .HasDefaultValue(ReportStatus.Unresolved)
+                    .IsRequired();
+                entity.Property(report => report.ReportTime)
+                    .IsRequired();
+            });
+
+            builder.Entity<OTP>(entity =>
+            {
+                entity.HasKey(otp => new { otp.UserID, otp.Code });
+                entity.HasOne(otp => otp.User)
+                    .WithOne(user => user.OTP)
                     .IsRequired();
             });
         }

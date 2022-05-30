@@ -14,7 +14,8 @@ namespace OnlyFundsAPI.BusinessObjects
         public DateTime UploadTime { get; set; }
         public int UploaderID { get; set; }
         public FileType AttachmentType { get; set; }
-        public bool Active { get; set; }
+        public string Preview { get; set; }
+        public PostStatus Status { get; set; }
         public User Uploader { get; set; }
         public ICollection<PostCategoryMap> CategoryMaps { get; set; }
         public ICollection<PostLike> Likes { get; set; }
