@@ -13,21 +13,21 @@ namespace OnlyFundsAPI.DataAccess.Implementations
     {
         public UserRepository() { }
 
-        public IQueryable<User> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            IQueryable<User> result = null;
+            IEnumerable<User> result = new List<User>();
             try
             {
                 using (var context = new OnlyFundsDBContext())
                 {
-                    result = context.Users;
+                    result = await context.Users.ToListAsync();
                 }
             }
             catch
             {
                 throw;
             }
-            return result;
+            return result.AsQueryable();
         }
 
         public async Task<User> GetUserByID(int id)

@@ -26,7 +26,7 @@ namespace OnlyFundsAPI.BusinessObjects
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Directory.GetParent(".").ToString() + Path.DirectorySeparatorChar + "BusinessObjects")
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             var config = builder.Build();
             optionsBuilder.UseSqlServer(config.GetConnectionString("OnlyFundsDB"));
