@@ -8,8 +8,8 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
 {
     interface IRepoWrapper
     {
-        private IUserRepository Users { get; }
-       
-        
+        IUserRepository Users { get; }
+
+
     }
 }
