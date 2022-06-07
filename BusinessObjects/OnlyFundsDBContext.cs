@@ -81,6 +81,8 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.Property(post => post.Preview)
                     .HasMaxLength(1500);
+                entity.Property(post => post.Active)
+                    .HasDefaultValue(true);
             });
 
             builder.Entity<Comment>(entity =>

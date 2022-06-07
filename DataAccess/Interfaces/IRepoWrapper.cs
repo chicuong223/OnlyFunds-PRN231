@@ -9,5 +9,6 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
     public interface IRepoWrapper
     {
         IUserRepository Users { get; }
+        ICommentRepository Comments { get; }
     }
 }

@@ -10,6 +10,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
     public class RepoWrapper : IRepoWrapper
     {
         private IUserRepository _user;
+        private ICommentRepository _comment;
         public IUserRepository Users
         {
             get
@@ -19,6 +20,18 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                     _user = new UserRepository();
                 }
                 return _user;
+            }
+        }
+
+        public ICommentRepository Comments
+        {
+            get
+            {
+                if (_comment == null)
+                {
+                    _comment = new CommentRepository();
+                }
+                return _comment;
             }
         }
     }
