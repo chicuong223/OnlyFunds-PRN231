@@ -1,14 +1,12 @@
 ﻿using OnlyFundsAPI.BusinessObjects;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Repositories.RepositoryInterfaces
 {
-    interface IUserRepo
+    public interface IReportRepo
     {
-        Task<User> GetUserByID(int id);
-        Task<User> GetUserByPasswordAndUsername(string username, string password);
-        IQueryable<User> GetUsers();
+        IQueryable<Report> GetList();
+        Report Get(int id);
         void Insert(Report inserted);
         void Update(Report updated);
         void Delete(int id);
