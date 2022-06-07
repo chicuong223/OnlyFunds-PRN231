@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
@@ -24,6 +25,7 @@ namespace OnlyFundsAPI.API.Controllers
 
         //Get a list of users
         [EnableQuery]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             // return Ok(await userRepository.GetUsers());
