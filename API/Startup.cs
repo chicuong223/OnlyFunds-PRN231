@@ -11,7 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
+using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Implementations;
 using OnlyFundsAPI.DataAccess.Interfaces;
 
@@ -32,13 +35,14 @@ namespace API
 
             services.AddControllers().AddOData(options =>
             {
-                options.Select().SetMaxTop(20).Filter().OrderBy();
+                options.Select().SetMaxTop(20).Filter().OrderBy().Count().AddRouteComponents("odata", GetEdmModel());
             });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
-            services.AddScoped<IUserRepository, UserRepository>();
+            // services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRepoWrapper, RepoWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +65,13 @@ namespace API
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private IEdmModel GetEdmModel()
+        {
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            builder.EntitySet<User>("User");
+            return builder.GetEdmModel();
         }
     }
 }
