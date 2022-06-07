@@ -89,6 +89,10 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             }
             catch (Exception ex)
             {
+                if (ex is ArgumentException)
+                {
+                    throw new ArgumentException(ex.Message);
+                }
                 throw new Exception(ex.Message);
             }
         }
@@ -111,13 +115,18 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                     {
                         throw new ArgumentException("Email is used!");
                     }
+                    user.Password = PasswordUtils.HashString(user.Password);
                     context.Entry(user).State = EntityState.Modified;
                     await context.SaveChangesAsync();
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                throw ex;
+                throw new ArgumentException(ex.Message);
+            }
+            catch (DbUpdateConcurrencyException de)
+            {
+                throw new DbUpdateConcurrencyException(de.Message);
             }
             return user;
         }
@@ -129,7 +138,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                 using (var context = new OnlyFundsDBContext())
                 {
                     var user = await context.Users.FindAsync(id);
-                    if (user != null)
+                    if (user != null && user.Active)
                     {
                         user.Active = false;
                         context.Entry(user).State = EntityState.Modified;
@@ -138,7 +147,6 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                     else
                     {
                         throw new ArgumentException("User ID not found!");
-
                     }
                 }
             }

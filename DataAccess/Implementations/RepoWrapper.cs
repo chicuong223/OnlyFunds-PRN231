@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Implementations
 {
-    class RepoWrapper
+    public class RepoWrapper : IRepoWrapper
     {
         private IUserRepository _user;
         public IUserRepository Users

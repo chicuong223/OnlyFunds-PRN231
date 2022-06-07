@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Interfaces
 {
-    interface IRepoWrapper
+    public interface IRepoWrapper
     {
         IUserRepository Users { get; }
-
-
     }
 }
