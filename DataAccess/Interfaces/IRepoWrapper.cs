@@ -10,5 +10,6 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
     {
         IUserRepository Users { get; }
         ICommentRepository Comments { get; }
+        ICommentLikeRepository CommentLikes { get; }
     }
 }
