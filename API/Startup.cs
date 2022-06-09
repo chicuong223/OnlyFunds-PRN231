@@ -121,6 +121,8 @@ namespace API
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<User>("User");
             builder.EntitySet<Comment>("Comment");
+            builder.EntitySet<CommentLike>("CommentLike");
+            builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             return builder.GetEdmModel();
         }
     }
