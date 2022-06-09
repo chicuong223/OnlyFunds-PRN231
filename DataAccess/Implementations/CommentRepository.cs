@@ -20,7 +20,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                     var post = await context.Posts.FindAsync(comment.PostID);
                     if (user == null || !user.Active || user.Banned) throw new ArgumentException("User not found!");
                     if (post == null || !post.Active) throw new ArgumentException("Post not found!");
-                    comment.CommentTime = DateTime.Now;
+                    // comment.CommentTime = DateTime.Now;
                     await context.AddAsync<Comment>(comment);
                     await context.SaveChangesAsync();
                 }
@@ -42,6 +42,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             {
                 using (var context = new OnlyFundsDBContext())
                 {
+                    context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
                     var comment = await context.Comments.FindAsync(id) ?? throw new ArgumentException("Comment not found");
                     comment.IsActive = false;
                     context.Entry(comment).State = EntityState.Modified;
@@ -85,7 +86,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             {
                 throw;
             }
-            return result.AsQueryable();
+            return result;
         }
 
         public async Task<Comment> Update(Comment comment)
@@ -95,10 +96,12 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                 Comment commentToUpdate = null;
                 using (var context = new OnlyFundsDBContext())
                 {
+                    context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
                     commentToUpdate = await context.Comments.FindAsync(comment.CommentID) ?? throw new ArgumentException("Comment not found");
                     commentToUpdate.Content = comment.Content;
                     commentToUpdate.CommentTime = DateTime.Now;
                     context.Entry(comment).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
                 }
                 return commentToUpdate;
             }

@@ -120,6 +120,7 @@ namespace API
         {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<User>("User");
+            builder.EntitySet<Comment>("Comment");
             return builder.GetEdmModel();
         }
     }

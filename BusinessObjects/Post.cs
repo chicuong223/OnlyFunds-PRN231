@@ -13,7 +13,8 @@ namespace OnlyFundsAPI.BusinessObjects
         public string Description { get; set; }
         public DateTime UploadTime { get; set; }
         public int UploaderID { get; set; }
-        public FileType AttachmentType { get; set; }
+        public FileType? AttachmentType { get; set; }
+        public string FileURL { get; set; }
         public string Preview { get; set; }
         public PostStatus Status { get; set; }
         public User Uploader { get; set; }
