@@ -11,14 +11,14 @@ namespace BusinessObjects.Migrations
                 name: "PostCategories",
                 columns: table => new
                 {
-                    CategoryID = table.Column<int>(type: "int", nullable: false)
+                    TagID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    TagName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostCategories", x => x.CategoryID);
+                    table.PrimaryKey("PK_PostCategories", x => x.TagID);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,30 +164,30 @@ namespace BusinessObjects.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostCategoryMaps",
+                name: "PostTagMaps",
                 columns: table => new
                 {
-                    CategoryID = table.Column<int>(type: "int", nullable: false),
+                    TagID = table.Column<int>(type: "int", nullable: false),
                     PostID = table.Column<int>(type: "int", nullable: false),
                     PostID1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostCategoryMaps", x => new { x.CategoryID, x.PostID });
+                    table.PrimaryKey("PK_PostTagMaps", x => new { x.TagID, x.PostID });
                     table.ForeignKey(
-                        name: "FK_PostCategoryMaps_PostCategories_CategoryID",
-                        column: x => x.CategoryID,
+                        name: "FK_PostTagMaps_PostCategories_TagID",
+                        column: x => x.TagID,
                         principalTable: "PostCategories",
-                        principalColumn: "CategoryID",
+                        principalColumn: "TagID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostCategoryMaps_Posts_PostID",
+                        name: "FK_PostTagMaps_Posts_PostID",
                         column: x => x.PostID,
                         principalTable: "Posts",
                         principalColumn: "PostID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostCategoryMaps_Posts_PostID1",
+                        name: "FK_PostTagMaps_Posts_PostID1",
                         column: x => x.PostID1,
                         principalTable: "Posts",
                         principalColumn: "PostID",
@@ -276,19 +276,19 @@ namespace BusinessObjects.Migrations
                 column: "FollowerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostCategories_CategoryName",
+                name: "IX_PostCategories_TagName",
                 table: "PostCategories",
-                column: "CategoryName",
+                column: "TagName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostCategoryMaps_PostID",
-                table: "PostCategoryMaps",
+                name: "IX_PostTagMaps_PostID",
+                table: "PostTagMaps",
                 column: "PostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostCategoryMaps_PostID1",
-                table: "PostCategoryMaps",
+                name: "IX_PostTagMaps_PostID1",
+                table: "PostTagMaps",
                 column: "PostID1");
 
             migrationBuilder.CreateIndex(
@@ -329,7 +329,7 @@ namespace BusinessObjects.Migrations
                 name: "Follows");
 
             migrationBuilder.DropTable(
-                name: "PostCategoryMaps");
+                name: "PostTagMaps");
 
             migrationBuilder.DropTable(
                 name: "PostLikes");

@@ -19,7 +19,7 @@ namespace OnlyFundsAPI.BusinessObjects
         public PostStatus Status { get; set; }
         public User Uploader { get; set; }
         public bool Active { get; set; }
-        public ICollection<PostCategoryMap> CategoryMaps { get; set; }
+        public ICollection<PostTagMap> TagMaps { get; set; }
         public ICollection<PostLike> Likes { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Bookmark> Bookmarks { get; set; }

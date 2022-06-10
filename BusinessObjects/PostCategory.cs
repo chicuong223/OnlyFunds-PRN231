@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace OnlyFundsAPI.BusinessObjects
 {
-    public class PostCategory
+    public class PostTag
     {
-        public int CategoryID { get; set; }
-        public string CategoryName { get; set; }
+        public int TagID { get; set; }
+        public string TagName { get; set; }
         public bool Active { get; set; }
-        ICollection<PostCategoryMap> PostMaps { get; set; }
+        ICollection<PostTagMap> PostMaps { get; set; }
     }
 }

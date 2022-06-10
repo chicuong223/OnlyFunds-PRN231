@@ -16,8 +16,8 @@ namespace OnlyFundsAPI.BusinessObjects
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
-        public DbSet<PostCategory> PostCategories { get; set; }
-        public DbSet<PostCategoryMap> PostCategoryMaps { get; set; }
+        public DbSet<PostTag> PostCategories { get; set; }
+        public DbSet<PostTagMap> PostTagMaps { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -106,24 +106,24 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
             });
 
-            builder.Entity<PostCategory>(entity =>
+            builder.Entity<PostTag>(entity =>
             {
-                entity.HasKey(category => category.CategoryID);
-                entity.Property(category => category.CategoryName)
+                entity.HasKey(Tag => Tag.TagID);
+                entity.Property(Tag => Tag.TagName)
                     .HasMaxLength(100)
                     .IsRequired();
-                entity.HasIndex(category => category.CategoryName)
+                entity.HasIndex(Tag => Tag.TagName)
                     .IsUnique();
-                entity.Property(category => category.Active)
+                entity.Property(Tag => Tag.Active)
                     .HasDefaultValue(true);
             });
 
-            builder.Entity<PostCategoryMap>(entity =>
+            builder.Entity<PostTagMap>(entity =>
             {
-                entity.HasKey(pc => new { pc.CategoryID, pc.PostID });
-                entity.HasOne(pc => pc.Category)
+                entity.HasKey(pc => new { pc.TagID, pc.PostID });
+                entity.HasOne(pc => pc.Tag)
                     .WithMany()
-                    .HasForeignKey(pc => pc.CategoryID);
+                    .HasForeignKey(pc => pc.TagID);
                 entity.HasOne(pc => pc.Post)
                     .WithMany()
                     .HasForeignKey(pc => pc.PostID);

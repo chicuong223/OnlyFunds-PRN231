@@ -1,10 +1,10 @@
 namespace OnlyFundsAPI.BusinessObjects
 {
-    public class PostCategoryMap
+    public class PostTagMap
     {
-        public int CategoryID { get; set; }
+        public int TagID { get; set; }
         public int PostID { get; set; }
-        public PostCategory Category { get; set; }
+        public PostTag Tag { get; set; }
         public Post Post { get; set; }
     }
 }
