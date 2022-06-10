@@ -16,7 +16,7 @@ namespace OnlyFundsAPI.BusinessObjects
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
-        public DbSet<PostTag> PostCategories { get; set; }
+        public DbSet<PostTag> PostTags { get; set; }
         public DbSet<PostTagMap> PostTagMaps { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Donation> Donations { get; set; }
