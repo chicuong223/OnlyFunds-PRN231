@@ -7,7 +7,7 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetUsers();
+        IQueryable<User> GetUsers();
         Task<User> GetUserByID(int id);
         Task<User> GetUserByUsernameAndPassword(string username, string password);
         Task<User> Create(User user);

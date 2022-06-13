@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
@@ -21,18 +22,17 @@ namespace OnlyFundsAPI.API.Controllers
         }
 
         [EnableQuery]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            var result = (await repo.Comments.GetList()).AsQueryable();
+            var result = repo.Comments.GetList();
             return Ok(result);
         }
 
         [EnableQuery]
-        public async Task<IActionResult> Get(int key)
+        public SingleResult<Comment> Get(int key)
         {
-            var result = await repo.Comments.GetByID(key);
-            if (result == null) return NotFound();
-            return Ok(result);
+            var result = repo.Comments.GetList().Where(cmt => cmt.CommentID == key);
+            return SingleResult.Create(result);
         }
 
         [Authorize(Roles = "User")]

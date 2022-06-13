@@ -11,17 +11,18 @@ namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class UserRepository : IUserRepository
     {
-        public UserRepository() { }
+        private readonly OnlyFundsDBContext context;
+        public UserRepository(OnlyFundsDBContext context)
+        {
+            this.context = context;
+        }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public IQueryable<User> GetUsers()
         {
             IEnumerable<User> result = new List<User>();
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.Users.ToListAsync();
-                }
+                result = context.Users.AsQueryable();
             }
             catch
             {
@@ -35,10 +36,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             User result = null;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.Users.FindAsync(id);
-                }
+                result = await context.Users.FindAsync(id);
             }
             catch
             {
@@ -52,12 +50,9 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             User result = null;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.Users
-                        .SingleOrDefaultAsync(user => user.Username.Equals(username)
-                            && user.Password.Equals(PasswordUtils.HashString(password)));
-                }
+                result = await context.Users
+                    .SingleOrDefaultAsync(user => user.Username.Equals(username)
+                        && user.Password.Equals(PasswordUtils.HashString(password)));
             }
             catch
             {
@@ -70,22 +65,19 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
+                var existingUser = await context.Users.SingleOrDefaultAsync(u => u.Username == user.Username);
+                if (existingUser != null)
                 {
-                    var existingUser = await context.Users.SingleOrDefaultAsync(u => u.Username == user.Username);
-                    if (existingUser != null)
-                    {
-                        throw new ArgumentException("Username is used!");
-                    }
-                    existingUser = await context.Users.SingleOrDefaultAsync(u => u.Email.Equals(user.Email));
-                    if (existingUser != null)
-                    {
-                        throw new ArgumentException("Email is used!");
-                    }
-                    await context.Users.AddAsync(user);
-                    await context.SaveChangesAsync();
-                    return user;
+                    throw new ArgumentException("Username is used!");
                 }
+                existingUser = await context.Users.SingleOrDefaultAsync(u => u.Email.Equals(user.Email));
+                if (existingUser != null)
+                {
+                    throw new ArgumentException("Email is used!");
+                }
+                await context.Users.AddAsync(user);
+                await context.SaveChangesAsync();
+                return user;
             }
             catch (Exception ex)
             {
@@ -101,24 +93,21 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
+                var existingUser = context.Users
+                    .SingleOrDefault(u => u.Username.ToLower().Equals(user.Username.ToLower()));
+                if (existingUser != null && existingUser.UserID != user.UserID)
                 {
-                    var existingUser = context.Users
-                        .SingleOrDefault(u => u.Username.ToLower().Equals(user.Username.ToLower()));
-                    if (existingUser != null && existingUser.UserID != user.UserID)
-                    {
-                        throw new ArgumentException("Username is used!");
-                    }
-                    existingUser = context.Users
-                        .SingleOrDefault(u => u.Email.ToLower().Equals(user.Email.ToLower()));
-                    if (existingUser != null && existingUser.UserID != user.UserID)
-                    {
-                        throw new ArgumentException("Email is used!");
-                    }
-                    user.Password = PasswordUtils.HashString(user.Password);
-                    context.Entry(user).State = EntityState.Modified;
-                    await context.SaveChangesAsync();
+                    throw new ArgumentException("Username is used!");
                 }
+                existingUser = context.Users
+                    .SingleOrDefault(u => u.Email.ToLower().Equals(user.Email.ToLower()));
+                if (existingUser != null && existingUser.UserID != user.UserID)
+                {
+                    throw new ArgumentException("Email is used!");
+                }
+                user.Password = PasswordUtils.HashString(user.Password);
+                context.Entry(user).State = EntityState.Modified;
+                await context.SaveChangesAsync();
             }
             catch (ArgumentException ex)
             {
@@ -135,19 +124,16 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
+                var user = await context.Users.FindAsync(id);
+                if (user != null && user.Active)
                 {
-                    var user = await context.Users.FindAsync(id);
-                    if (user != null && user.Active)
-                    {
-                        user.Active = false;
-                        context.Entry(user).State = EntityState.Modified;
-                        await context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        throw new ArgumentException("User ID not found!");
-                    }
+                    user.Active = false;
+                    context.Entry(user).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new ArgumentException("User ID not found!");
                 }
             }
             catch

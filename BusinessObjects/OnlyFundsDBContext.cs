@@ -57,10 +57,8 @@ namespace OnlyFundsAPI.BusinessObjects
                 entity.Property(user => user.LastName)
                     .HasMaxLength(100)
                     .IsRequired();
-                entity.Property(user => user.Banned)
-                    .HasDefaultValue(false);
-                entity.Property(user => user.Active)
-                    .HasDefaultValue(true);
+                entity.Property(user => user.Banned);
+                entity.Property(user => user.Active);
             });
 
             builder.Entity<Post>(entity =>
@@ -75,14 +73,12 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.Property(post => post.Description)
                     .HasMaxLength(3000);
-                entity.Property(post => post.Status)
-                    .HasDefaultValue(PostStatus.Active);
+                entity.Property(post => post.Status);
                 entity.Property(post => post.UploadTime)
                     .IsRequired();
                 entity.Property(post => post.Preview)
                     .HasMaxLength(1500);
-                entity.Property(post => post.Active)
-                    .HasDefaultValue(true);
+                entity.Property(post => post.Active);
             });
 
             builder.Entity<Comment>(entity =>
@@ -91,8 +87,7 @@ namespace OnlyFundsAPI.BusinessObjects
                 entity.Property(cmt => cmt.Content)
                     .HasMaxLength(500)
                     .IsRequired();
-                entity.Property(cmt => cmt.IsActive)
-                    .HasDefaultValue(true);
+                entity.Property(cmt => cmt.IsActive);
                 entity.HasOne(cmt => cmt.Uploader)
                     .WithMany(user => user.Comments)
                     .HasForeignKey(cmt => cmt.UploaderID)
@@ -114,8 +109,7 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.HasIndex(Tag => Tag.TagName)
                     .IsUnique();
-                entity.Property(Tag => Tag.Active)
-                    .HasDefaultValue(true);
+                entity.Property(Tag => Tag.Active);
             });
 
             builder.Entity<PostTagMap>(entity =>
@@ -215,8 +209,7 @@ namespace OnlyFundsAPI.BusinessObjects
                 entity.Property(noti => noti.Content)
                     .HasMaxLength(3000)
                     .IsRequired();
-                entity.Property(noti => noti.IsRead)
-                    .HasDefaultValue(false);
+                entity.Property(noti => noti.IsRead);
                 entity.Property(noti => noti.NotificationTime)
                     .IsRequired();
             });
@@ -238,7 +231,6 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired()
                     .HasMaxLength(1000);
                 entity.Property(report => report.Status)
-                    .HasDefaultValue(ReportStatus.Unresolved)
                     .IsRequired();
                 entity.Property(report => report.ReportTime)
                     .IsRequired();

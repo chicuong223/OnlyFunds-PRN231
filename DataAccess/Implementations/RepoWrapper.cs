@@ -1,4 +1,5 @@
-﻿using OnlyFundsAPI.DataAccess.Interfaces;
+﻿using OnlyFundsAPI.BusinessObjects;
+using OnlyFundsAPI.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,18 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         private ICommentRepository _comment;
         private ICommentLikeRepository _commentLikeRepository;
         private ITagRepository _tagRepository;
+        private readonly OnlyFundsDBContext _dbContext;
+        public RepoWrapper(OnlyFundsDBContext context)
+        {
+            _dbContext = context;
+        }
         public IUserRepository Users
         {
             get
             {
                 if (_user == null)
                 {
-                    _user = new UserRepository();
+                    _user = new UserRepository(_dbContext);
                 }
                 return _user;
             }
@@ -31,7 +37,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             {
                 if (_comment == null)
                 {
-                    _comment = new CommentRepository();
+                    _comment = new CommentRepository(_dbContext);
                 }
                 return _comment;
             }
@@ -41,7 +47,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_commentLikeRepository == null) _commentLikeRepository = new CommentLikeRepository();
+                if (_commentLikeRepository == null) _commentLikeRepository = new CommentLikeRepository(_dbContext);
                 return _commentLikeRepository;
             }
         }
@@ -50,7 +56,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_tagRepository == null) _tagRepository = new TagRepository();
+                if (_tagRepository == null) _tagRepository = new TagRepository(_dbContext);
                 return _tagRepository;
             }
         }

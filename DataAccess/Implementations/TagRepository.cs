@@ -9,38 +9,40 @@ namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class TagRepository : ITagRepository
     {
+        private readonly OnlyFundsDBContext context;
+        public TagRepository(OnlyFundsDBContext context)
+        {
+            this.context = context;
+        }
         public async Task<PostTag> Create(PostTag tag)
         {
             PostTag result = null;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    var existingName = await context.PostTags
-                        .FirstOrDefaultAsync(t => t.TagName.ToLower().Equals(tag.TagName.ToLower()));
+                var existingName = await context.PostTags
+                    .FirstOrDefaultAsync(t => t.TagName.ToLower().Equals(tag.TagName.ToLower()));
 
-                    //check if a tag with input name exists
-                    //if tag exists: 
-                    //check if it is active
-                    //if not, change to active
-                    //else, throw ArgumentException
-                    if (existingName != null)
-                    {
-                        if (existingName.Active) throw new ArgumentException("Tag with this name exists!");
-                        else
-                        {
-                            existingName.Active = true;
-                            context.Entry(existingName).State = EntityState.Modified;
-                            result = existingName;
-                        }
-                    }
+                //check if a tag with input name exists
+                //if tag exists: 
+                //check if it is active
+                //if not, change to active
+                //else, throw ArgumentException
+                if (existingName != null)
+                {
+                    if (existingName.Active) throw new ArgumentException("Tag with this name exists!");
                     else
                     {
-                        await context.PostTags.AddAsync(tag);
-                        result = tag;
+                        existingName.Active = true;
+                        context.Entry(existingName).State = EntityState.Modified;
+                        result = existingName;
                     }
-                    await context.SaveChangesAsync();
                 }
+                else
+                {
+                    await context.PostTags.AddAsync(tag);
+                    result = tag;
+                }
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -53,16 +55,13 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-                    var tag = await context.PostTags
-                        .SingleOrDefaultAsync(t => t.TagID == id && t.Active)
-                        ?? throw new ArgumentException("Tag not found!");
-                    tag.Active = false;
-                    context.PostTags.Update(tag);
-                    await context.SaveChangesAsync();
-                }
+                context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                var tag = await context.PostTags
+                    .SingleOrDefaultAsync(t => t.TagID == id && t.Active)
+                    ?? throw new ArgumentException("Tag not found!");
+                tag.Active = false;
+                context.PostTags.Update(tag);
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -75,10 +74,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             PostTag result = null;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.PostTags.FindAsync(id);
-                }
+                result = await context.PostTags.FindAsync(id);
             }
             catch
             {
@@ -92,10 +88,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             IEnumerable<PostTag> result = new List<PostTag>();
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.PostTags.ToListAsync();
-                }
+                result = await context.PostTags.ToListAsync();
             }
             catch
             {

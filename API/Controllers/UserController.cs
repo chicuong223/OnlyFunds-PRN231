@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
@@ -26,20 +28,18 @@ namespace OnlyFundsAPI.API.Controllers
         //Get a list of users
         [EnableQuery]
         [Authorize]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
             // return Ok(await userRepository.GetUsers());
-            return Ok(await repo.Users.GetUsers());
+            return Ok(repo.Users.GetUsers());
         }
 
         //Get User by ID
         [EnableQuery]
-        public async Task<IActionResult> Get(int key)
+        public SingleResult<User> Get(int key)
         {
-            var result = await repo.Users.GetUserByID(key);
-            if (result == null)
-                return NotFound();
-            return Ok(result);
+            var result = repo.Users.GetUsers().Where(user => user.UserID == key);
+            return SingleResult.Create(result);
         }
 
         //Create user
