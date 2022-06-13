@@ -10,20 +10,22 @@ namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class CommentRepository : ICommentRepository
     {
+        private readonly OnlyFundsDBContext context;
+        public CommentRepository(OnlyFundsDBContext context)
+        {
+            this.context = context;
+        }
         public async Task<Comment> Create(Comment comment)
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    var user = await context.Users.FindAsync(comment.UploaderID);
-                    var post = await context.Posts.FindAsync(comment.PostID);
-                    if (user == null || !user.Active || user.Banned) throw new ArgumentException("User not found!");
-                    if (post == null || !post.Active) throw new ArgumentException("Post not found!");
-                    // comment.CommentTime = DateTime.Now;
-                    await context.AddAsync<Comment>(comment);
-                    await context.SaveChangesAsync();
-                }
+                var user = await context.Users.FindAsync(comment.UploaderID);
+                var post = await context.Posts.FindAsync(comment.PostID);
+                if (user == null || !user.Active || user.Banned) throw new ArgumentException("User not found!");
+                if (post == null || !post.Active) throw new ArgumentException("Post not found!");
+                // comment.CommentTime = DateTime.Now;
+                await context.AddAsync<Comment>(comment);
+                await context.SaveChangesAsync();
                 return comment;
             }
             catch (ArgumentException ex)
@@ -40,14 +42,11 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-                    var comment = await context.Comments.FindAsync(id) ?? throw new ArgumentException("Comment not found");
-                    comment.IsActive = false;
-                    context.Entry(comment).State = EntityState.Modified;
-                    await context.SaveChangesAsync();
-                }
+                context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                var comment = await context.Comments.FindAsync(id) ?? throw new ArgumentException("Comment not found");
+                comment.IsActive = false;
+                context.Entry(comment).State = EntityState.Modified;
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -60,10 +59,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             Comment comment = null;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    comment = await context.Comments.FindAsync(key);
-                }
+                comment = await context.Comments.FindAsync(key);
             }
             catch
             {
@@ -72,15 +68,12 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             return comment;
         }
 
-        public async Task<IEnumerable<Comment>> GetList()
+        public IQueryable<Comment> GetList()
         {
-            IEnumerable<Comment> result = new List<Comment>();
+            IQueryable<Comment> result;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.Comments.Where(cmt => cmt.IsActive).ToListAsync();
-                }
+                result = context.Comments.AsQueryable();
             }
             catch
             {
@@ -94,15 +87,12 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             try
             {
                 Comment commentToUpdate = null;
-                using (var context = new OnlyFundsDBContext())
-                {
-                    context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-                    commentToUpdate = await context.Comments.FindAsync(comment.CommentID) ?? throw new ArgumentException("Comment not found");
-                    commentToUpdate.Content = comment.Content;
-                    commentToUpdate.CommentTime = DateTime.Now;
-                    context.Entry(comment).State = EntityState.Modified;
-                    await context.SaveChangesAsync();
-                }
+                context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                commentToUpdate = await context.Comments.FindAsync(comment.CommentID) ?? throw new ArgumentException("Comment not found");
+                commentToUpdate.Content = comment.Content;
+                commentToUpdate.CommentTime = DateTime.Now;
+                context.Entry(comment).State = EntityState.Modified;
+                await context.SaveChangesAsync();
                 return commentToUpdate;
             }
             catch

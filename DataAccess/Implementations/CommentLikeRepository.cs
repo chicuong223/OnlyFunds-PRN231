@@ -8,15 +8,18 @@ namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class CommentLikeRepository : ICommentLikeRepository
     {
+        private readonly OnlyFundsDBContext context;
+        public CommentLikeRepository(OnlyFundsDBContext context)
+        {
+            this.context = context;
+        }
         public async Task<CommentLike> Create(CommentLike commentLike)
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    await context.CommentLikes.AddAsync(commentLike);
-                    await context.SaveChangesAsync();
-                }
+
+                await context.CommentLikes.AddAsync(commentLike);
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -29,14 +32,11 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    var commentLike = await context.CommentLikes
-                        .SingleOrDefaultAsync(cl => cl.CommentID == commentID && cl.UserID == userID)
-                        ?? throw new ArgumentException("Comment Like not found");
-                    context.CommentLikes.Remove(commentLike);
-                    await context.SaveChangesAsync();
-                }
+                var commentLike = await context.CommentLikes
+                    .SingleOrDefaultAsync(cl => cl.CommentID == commentID && cl.UserID == userID)
+                    ?? throw new ArgumentException("Comment Like not found");
+                context.CommentLikes.Remove(commentLike);
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -49,11 +49,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             CommentLike result = null;
             try
             {
-                using (var context = new OnlyFundsDBContext())
-                {
-                    result = await context.CommentLikes
-                        .SingleOrDefaultAsync(cl => cl.CommentID == commentID && cl.UserID == userID);
-                }
+                result = await context.CommentLikes
+                    .SingleOrDefaultAsync(cl => cl.CommentID == commentID && cl.UserID == userID);
             }
             catch
             {
