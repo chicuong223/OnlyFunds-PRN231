@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
@@ -13,6 +14,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         public TagRepository(OnlyFundsDBContext context)
         {
             this.context = context;
+            this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
         public async Task<PostTag> Create(PostTag tag)
         {
@@ -83,12 +85,12 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             return result;
         }
 
-        public async Task<IEnumerable<PostTag>> GetList()
+        public IQueryable<PostTag> GetList()
         {
-            IEnumerable<PostTag> result = new List<PostTag>();
+            IQueryable<PostTag> result;
             try
             {
-                result = await context.PostTags.ToListAsync();
+                result = context.PostTags.AsQueryable();
             }
             catch
             {
@@ -97,9 +99,22 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             return result;
         }
 
-        public Task<PostTag> Update(PostTag tag)
+        public async Task<PostTag> Update(PostTag tag)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var otherTagWithSameName = await context.PostTags
+                    .FirstOrDefaultAsync(t => t.TagName.ToLower().Equals(tag.TagName.ToLower())
+                        && t.TagID != tag.TagID && t.Active);
+                if (otherTagWithSameName != null) throw new ArgumentException("Tag Name exists");
+                context.Entry(tag).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return tag;
         }
     }
 }
