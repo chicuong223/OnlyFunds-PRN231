@@ -80,7 +80,7 @@ namespace API
                         ValidateAudience = true,
                         ValidAudience = Configuration["Jwt:Audience"],
                         ValidIssuer = Configuration["Jwt:Issuer"],
-                        // ValidateIssuerSigningKey = true,
+                        ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
@@ -102,8 +102,6 @@ namespace API
 
             app.UseHttpsRedirection();
 
-            // app.UseAuthentication();
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -122,6 +120,8 @@ namespace API
             builder.EntitySet<User>("User");
             builder.EntitySet<Comment>("Comment");
             builder.EntitySet<CommentLike>("CommentLike");
+            builder.EntitySet<PostTag>("Tag");
+            builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             return builder.GetEdmModel();
         }

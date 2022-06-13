@@ -12,6 +12,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         private IUserRepository _user;
         private ICommentRepository _comment;
         private ICommentLikeRepository _commentLikeRepository;
+        private ITagRepository _tagRepository;
         public IUserRepository Users
         {
             get
@@ -42,6 +43,15 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             {
                 if (_commentLikeRepository == null) _commentLikeRepository = new CommentLikeRepository();
                 return _commentLikeRepository;
+            }
+        }
+
+        public ITagRepository Tags
+        {
+            get
+            {
+                if (_tagRepository == null) _tagRepository = new TagRepository();
+                return _tagRepository;
             }
         }
     }
