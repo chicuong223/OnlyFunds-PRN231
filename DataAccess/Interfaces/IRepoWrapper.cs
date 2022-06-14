@@ -12,5 +12,6 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
         ICommentRepository Comments { get; }
         ICommentLikeRepository CommentLikes { get; }
         ITagRepository Tags { get; }
+        IFollowRepository Follows { get; }
     }
 }

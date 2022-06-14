@@ -14,6 +14,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         private ICommentRepository _comment;
         private ICommentLikeRepository _commentLikeRepository;
         private ITagRepository _tagRepository;
+        private IFollowRepository _followRepository;
         private readonly OnlyFundsDBContext _dbContext;
         public RepoWrapper(OnlyFundsDBContext context)
         {
@@ -58,6 +59,15 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             {
                 if (_tagRepository == null) _tagRepository = new TagRepository(_dbContext);
                 return _tagRepository;
+            }
+        }
+
+        public IFollowRepository Follows
+        {
+            get
+            {
+                if (_followRepository == null) _followRepository = new FollowRepository(_dbContext);
+                return _followRepository;
             }
         }
     }

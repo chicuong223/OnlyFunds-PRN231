@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
@@ -37,6 +38,7 @@ namespace OnlyFundsAPI.API.Controllers
             return SingleResult.Create(result);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post([FromBody] PostTag tag)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -44,6 +46,7 @@ namespace OnlyFundsAPI.API.Controllers
             return Created(result);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int key)
         {
             try
@@ -58,6 +61,7 @@ namespace OnlyFundsAPI.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Patch(int key, [FromBody] Delta<PostTag> tag)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

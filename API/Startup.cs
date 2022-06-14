@@ -124,6 +124,8 @@ namespace API
             builder.EntitySet<Comment>("Comment");
             builder.EntitySet<CommentLike>("CommentLike");
             builder.EntitySet<PostTag>("Tag");
+            builder.EntitySet<Follow>("Follow");
+            builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             return builder.GetEdmModel();
