@@ -11,8 +11,7 @@ namespace DataAccess.Interfaces
     {
         IQueryable<PostLike> GetList();
         Task<PostLike> GetByID(int likerId, int postId);
-        Task<PostLike> Create(PostLike bookmark);
-        Task<PostLike> Update(PostLike bookmark);
+        Task<PostLike> Create(PostLike postLike);
         Task Delete(int likerId, int postId);
     }
 }
