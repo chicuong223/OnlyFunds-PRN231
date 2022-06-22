@@ -51,7 +51,7 @@ namespace DataAccess.Implementations
                 }
                 else
                 {
-                    throw new ArgumentException("Notification not found");
+                    throw new ArgumentException("Post Like not found");
                 }
             }
             catch
@@ -71,7 +71,7 @@ namespace DataAccess.Implementations
                 }
                 else
                 {
-                    throw new ArgumentException("Notification not found");
+                    throw new ArgumentException("Post Like not found");
                 }
             }
             catch
