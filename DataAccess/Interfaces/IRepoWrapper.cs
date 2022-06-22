@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,16 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
 {
     public interface IRepoWrapper
     {
-        IUserRepository Users { get; }
-        ICommentRepository Comments { get; }
+        IBookmarkRepository Bookmark { get; }
         ICommentLikeRepository CommentLikes { get; }
-        ITagRepository Tags { get; }
+        ICommentRepository Comments { get; }
         IFollowRepository Follows { get; }
+        INotificationRepository Notifications { get; }
+        IPostLikeRepository PostLikes { get; }
+        IPostRepository Posts { get; }
+        IPostTagMapRepository PostTagMaps { get; }
+        IReportRepository Reports { get; }
+        IUserRepository Users { get; }
+        ITagRepository Tags { get; }
     }
 }
