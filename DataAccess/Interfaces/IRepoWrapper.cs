@@ -9,7 +9,7 @@ namespace OnlyFundsAPI.DataAccess.Interfaces
 {
     public interface IRepoWrapper
     {
-        IBookmarkRepository Bookmark { get; }
+        IBookmarkRepository Bookmarks { get; }
         ICommentLikeRepository CommentLikes { get; }
         ICommentRepository Comments { get; }
         IFollowRepository Follows { get; }

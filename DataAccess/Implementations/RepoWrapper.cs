@@ -12,17 +12,17 @@ namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class RepoWrapper : IRepoWrapper
     {
-        private IUserRepository _user;
-        private ICommentRepository _comment;
-        private ICommentLikeRepository _commentLikeRepository;
-        private ITagRepository _tagRepository;
-        private IFollowRepository _followRepository;
-        private IBookmarkRepository _bookmark;
-        private IPostLikeRepository _postLike;
-        private IPostRepository _post;
-        private IPostTagMapRepository _postTagMap;
-        private IReportRepository _report;
-        private INotificationRepository _notification;
+        private IUserRepository _users;
+        private ICommentRepository _comments;
+        private ICommentLikeRepository _commentLikes;
+        private ITagRepository _tags;
+        private IFollowRepository _follows;
+        private IBookmarkRepository _bookmarks;
+        private IPostLikeRepository _postLikes;
+        private IPostRepository _posts;
+        private IPostTagMapRepository _postTagMaps;
+        private IReportRepository _reports;
+        private INotificationRepository _notifications;
         private readonly OnlyFundsDBContext _dbContext;
         public RepoWrapper(OnlyFundsDBContext context)
         {
@@ -32,11 +32,11 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_user == null)
+                if (_users == null)
                 {
-                    _user = new UserRepository(_dbContext);
+                    _users = new UserRepository(_dbContext);
                 }
-                return _user;
+                return _users;
             }
         }
 
@@ -44,11 +44,11 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_comment == null)
+                if (_comments == null)
                 {
-                    _comment = new CommentRepository(_dbContext);
+                    _comments = new CommentRepository(_dbContext);
                 }
-                return _comment;
+                return _comments;
             }
         }
 
@@ -56,8 +56,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_commentLikeRepository == null) _commentLikeRepository = new CommentLikeRepository(_dbContext);
-                return _commentLikeRepository;
+                if (_commentLikes == null) _commentLikes = new CommentLikeRepository(_dbContext);
+                return _commentLikes;
             }
         }
 
@@ -65,8 +65,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_tagRepository == null) _tagRepository = new TagRepository(_dbContext);
-                return _tagRepository;
+                if (_tags == null) _tags = new TagRepository(_dbContext);
+                return _tags;
             }
         }
 
@@ -74,17 +74,17 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_followRepository == null) _followRepository = new FollowRepository(_dbContext);
-                return _followRepository;
+                if (_follows == null) _follows = new FollowRepository(_dbContext);
+                return _follows;
             }
         }
 
-        public IBookmarkRepository Bookmark
+        public IBookmarkRepository Bookmarks
         {
             get
             {
-                if (_bookmark == null) _bookmark = new BookmarkRepository(_dbContext);
-                return _bookmark;
+                if (_bookmarks == null) _bookmarks = new BookmarkRepository(_dbContext);
+                return _bookmarks;
             }
         }
 
@@ -92,8 +92,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_notification == null) _notification = new NotificationRepository(_dbContext);
-                return _notification;
+                if (_notifications == null) _notifications = new NotificationRepository(_dbContext);
+                return _notifications;
             }
         }
 
@@ -101,8 +101,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_postLike == null) _postLike = new PostLikeRepository(_dbContext);
-                return _postLike;
+                if (_postLikes == null) _postLikes = new PostLikeRepository(_dbContext);
+                return _postLikes;
             }
         }
 
@@ -110,8 +110,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_post == null) _post = new PostRepository(_dbContext);
-                return _post;
+                if (_posts == null) _posts = new PostRepository(_dbContext);
+                return _posts;
             }
         }
 
@@ -119,8 +119,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_postTagMap == null) _postTagMap = new PostTagMapRepository(_dbContext);
-                return _postTagMap;
+                if (_postTagMaps == null) _postTagMaps = new PostTagMapRepository(_dbContext);
+                return _postTagMaps;
             }
         }
 
@@ -128,8 +128,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         {
             get
             {
-                if (_report == null) _report = new ReportRepository(_dbContext);
-                return _report;
+                if (_reports == null) _reports = new ReportRepository(_dbContext);
+                return _reports;
             }
         }
     }

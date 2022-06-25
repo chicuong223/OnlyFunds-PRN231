@@ -120,12 +120,16 @@ namespace API
         private IEdmModel GetEdmModel()
         {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<User>("User");
+            builder.EntitySet<Bookmark>("Bookmark");
             builder.EntitySet<Comment>("Comment");
             builder.EntitySet<CommentLike>("CommentLike");
-            builder.EntitySet<PostTag>("Tag");
             builder.EntitySet<Follow>("Follow");
+            builder.EntitySet<Notification>("Notification");
+            builder.EntitySet<PostLike>("PostLike");
+            builder.EntitySet<PostTag>("Tag");
+            builder.EntitySet<User>("User");
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
+            builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
             builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             return builder.GetEdmModel();
