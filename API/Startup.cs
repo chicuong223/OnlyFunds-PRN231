@@ -120,18 +120,19 @@ namespace API
         private IEdmModel GetEdmModel()
         {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<Bookmark>("Bookmark");
-            builder.EntitySet<Comment>("Comment");
-            builder.EntitySet<CommentLike>("CommentLike");
-            builder.EntitySet<Follow>("Follow");
-            builder.EntitySet<Notification>("Notification");
-            builder.EntitySet<PostLike>("PostLike");
-            builder.EntitySet<PostTag>("Tag");
-            builder.EntitySet<User>("User");
+            builder.EntitySet<Bookmark>("Bookmarks");
+            builder.EntitySet<Comment>("Comments");
+            builder.EntitySet<CommentLike>("CommentLikes");
+            builder.EntitySet<Follow>("Follows");
+            builder.EntitySet<Notification>("Notifications");
+            builder.EntitySet<PostLike>("PostLikes");
+            builder.EntitySet<PostTag>("Tags");
+            builder.EntitySet<User>("Users");
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
             builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
+            builder.EntityType<PostLike>().HasKey(like => new { like.PostID, like.UserID });
             return builder.GetEdmModel();
         }
     }

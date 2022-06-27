@@ -33,21 +33,21 @@ namespace API.Controllers
 
         // GET: api/Bookmarks/5
         [EnableQuery]
-        public async Task<SingleResult<Bookmark>> Get(int keyUserId, int keyPostId)
+        public SingleResult<Bookmark> Get(int keyUserID, int keyPostID)
         {
-            var result = _repo.Bookmarks.GetList().Where(e => e.UserID == keyUserId && e.PostID == keyPostId);
+            var result = _repo.Bookmarks.GetList().Where(e => e.UserID == keyUserID && e.PostID == keyPostID);
 
             return SingleResult.Create(result);
         }
 
         // PUT: api/Bookmarks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        public async Task<IActionResult> Patch(int keyUserId, int keyPostId, Delta<Bookmark> bookmark)
+        public async Task<IActionResult> Patch(int keyUserID, int keyPostID, Delta<Bookmark> bookmark)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var existingBookmark = await _repo.Bookmarks.GetBookmark(keyUserId, keyPostId);
+                var existingBookmark = await _repo.Bookmarks.GetBookmark(keyUserID, keyPostID);
                 if (existingBookmark == null) return BadRequest("Bookmark not found!");
                 var currentUserID = GetCurrentUserID();
                 if (existingBookmark.UserID != currentUserID) return Unauthorized("Bookmarking for others is not allowed!");
@@ -65,7 +65,7 @@ namespace API.Controllers
         // POST: api/Bookmarks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<Bookmark>> Post(Bookmark bookmark)
+        public async Task<IActionResult> Post([FromBody] Bookmark bookmark)
         {
             ModelState.ClearValidationState(nameof(Bookmark));
             var post = await _repo.Posts.GetByID(bookmark.PostID);
@@ -81,18 +81,18 @@ namespace API.Controllers
 
         // DELETE: api/Bookmarks/5
         [Authorize(Roles = "User")]
-        [HttpDelete("odata/{postId}")]
-        public async Task<IActionResult> DeleteBookmark(int postId)
+        [HttpDelete("odata/{keyPostID}")]
+        public async Task<IActionResult> Delete(int keyPostID)
         {
             var currentUserID = GetCurrentUserID();
             // if (currentUserID.Value != keyUserId) return Forbid();
             try
             {
-                await _repo.CommentLikes.Delete(currentUserID.Value, postId);
+                await _repo.CommentLikes.Delete(currentUserID.Value, keyPostID);
             }
-            catch 
+            catch
             {
-                var bokkmark = await _repo.Bookmarks.GetBookmark(currentUserID.Value, postId);
+                var bokkmark = await _repo.Bookmarks.GetBookmark(currentUserID.Value, keyPostID);
                 if (bokkmark == null) return NotFound();
                 throw;
             }

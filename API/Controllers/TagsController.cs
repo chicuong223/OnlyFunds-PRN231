@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +12,10 @@ using OnlyFundsAPI.DataAccess.Interfaces;
 
 namespace OnlyFundsAPI.API.Controllers
 {
-    public class TagController : ODataController
+    public class TagsController : ODataController
     {
         private readonly IRepoWrapper repo;
-        public TagController(IRepoWrapper repo)
+        public TagsController(IRepoWrapper repo)
         {
             this.repo = repo;
         }
