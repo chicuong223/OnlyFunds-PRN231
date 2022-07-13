@@ -15,11 +15,11 @@ namespace OnlyFundsAPI.API.Controllers
 {
     // [ApiController]
     // [Route("api/users")]
-    public class UserController : ODataController
+    public class UsersController : ODataController
     {
         // private readonly IUserRepository userRepository;
         private readonly IRepoWrapper repo;
-        public UserController(IRepoWrapper repo)
+        public UsersController(IRepoWrapper repo)
         {
             // this.userRepository = userRepository;
             this.repo = repo;

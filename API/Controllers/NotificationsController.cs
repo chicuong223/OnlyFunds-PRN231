@@ -25,14 +25,14 @@ namespace API.Controllers
 
         // GET: api/Notifications
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications()
+        public ActionResult<IEnumerable<Notification>> GetNotifications()
         {
             return Ok(_repo.Notifications.GetList());
         }
 
         // GET: api/Notifications/5
         [EnableQuery]
-        public async Task<SingleResult<Notification>> GetNotification(int key)
+        public SingleResult<Notification> GetNotification(int key)
         {
             var result = _repo.Notifications.GetList().Where(e => e.NotificationID == key);
 
@@ -41,7 +41,6 @@ namespace API.Controllers
 
         // PUT: api/Notifications/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
         public async Task<IActionResult> Patch(int key, Delta<Notification> notification)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -59,32 +58,27 @@ namespace API.Controllers
                 if (ex is ArgumentException) return NotFound(ex.Message);
                 throw new Exception(ex.Message);
             }
-
-            return NoContent();
         }
 
         // POST: api/Notifications
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Notification>> Post(Notification notification)
+        public async Task<ActionResult<Notification>> Post([FromBody] Notification notification)
         {
             if (NotificationExists(notification.NotificationID))
                 return BadRequest("User has liked this comment");
-            var result = _repo.Notifications.Create(notification);
+            var result = await _repo.Notifications.Create(notification);
             return Created(result);
         }
 
-        // DELETE: api/Notifications/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNotification(int id)
+        public async Task<IActionResult> Delete(int key)
         {
             try
             {
-                await _repo.Notifications.Delete(id);
+                await _repo.Notifications.Delete(key);
             }
             catch
             {
-                if (!NotificationExists(id)) return NotFound();
+                if (!NotificationExists(key)) return NotFound();
                 throw;
             }
 

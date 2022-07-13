@@ -10,10 +10,10 @@ using OnlyFundsAPI.DataAccess.Interfaces;
 
 namespace OnlyFundsAPI.API.Controllers
 {
-    public class CommentLikeController : ODataController
+    public class CommentLikesController : ODataController
     {
         private readonly IRepoWrapper repo;
-        public CommentLikeController(IRepoWrapper repo)
+        public CommentLikesController(IRepoWrapper repo)
         {
             this.repo = repo;
         }
@@ -41,14 +41,14 @@ namespace OnlyFundsAPI.API.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpDelete("odata/{commentId}")]
-        public async Task<IActionResult> Delete(int commentId)
+        [HttpDelete("odata/{keyCommentID}")]
+        public async Task<IActionResult> Delete(int keyCommentID)
         {
             var currentUserID = GetCurrentUserID();
             // if (currentUserID.Value != keyUserId) return Forbid();
-            var commentLike = await repo.CommentLikes.GetCommentLike(currentUserID.Value, commentId);
+            var commentLike = await repo.CommentLikes.GetCommentLike(currentUserID.Value, keyCommentID);
             if (commentLike == null) return NotFound();
-            await repo.CommentLikes.Delete(currentUserID.Value, commentId);
+            await repo.CommentLikes.Delete(currentUserID.Value, keyCommentID);
             return NoContent();
         }
 

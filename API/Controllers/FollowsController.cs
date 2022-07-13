@@ -11,10 +11,10 @@ using OnlyFundsAPI.DataAccess.Interfaces;
 
 namespace OnlyFundsAPI.API.Controllers
 {
-    public class FollowController : ODataController
+    public class FollowsController : ODataController
     {
         private readonly IRepoWrapper repo;
-        public FollowController(IRepoWrapper repo)
+        public FollowsController(IRepoWrapper repo)
         {
             this.repo = repo;
         }

@@ -13,10 +13,10 @@ using OnlyFundsAPI.DataAccess.Interfaces;
 
 namespace OnlyFundsAPI.API.Controllers
 {
-    public class CommentController : ODataController
+    public class CommentsController : ODataController
     {
         private readonly IRepoWrapper repo;
-        public CommentController(IRepoWrapper repo)
+        public CommentsController(IRepoWrapper repo)
         {
             this.repo = repo;
         }
