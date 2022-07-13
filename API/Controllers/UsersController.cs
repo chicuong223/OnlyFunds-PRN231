@@ -45,7 +45,7 @@ namespace OnlyFundsAPI.API.Controllers
         //Create user
         public async Task<IActionResult> Post([FromBody] User user)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
                 try
                 {

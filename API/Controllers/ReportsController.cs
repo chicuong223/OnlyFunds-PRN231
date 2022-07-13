@@ -119,7 +119,7 @@ namespace API.Controllers
                 if (!GetCurrentUserRole().Equals("Admin"))
                 {
                     var currentUserID = GetCurrentUserID();
-                    if (currentUserID != report.UploaderID)
+                    if (currentUserID != report.ReporterID)
                     {
                         return Unauthorized("Deleting other users' comments is not allowed!");
                     }

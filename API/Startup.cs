@@ -130,6 +130,7 @@ namespace API
             builder.EntitySet<User>("Users");
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
+            builder.EntityType<PostLike>().HasKey(pLike => new { pLike.UserID, pLike.PostID });
             builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             builder.EntityType<PostLike>().HasKey(like => new { like.PostID, like.UserID });
