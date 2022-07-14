@@ -81,7 +81,7 @@ namespace API.Controllers
 
         // DELETE: api/Bookmarks/5
         [Authorize(Roles = "User")]
-        [HttpDelete("odata/{keyPostID}")]
+        [HttpDelete("odata/[controller]/{keyPostID}")]
         public async Task<IActionResult> Delete(int keyPostID)
         {
             var currentUserID = GetCurrentUserID();

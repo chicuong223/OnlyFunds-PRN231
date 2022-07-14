@@ -33,7 +33,7 @@ namespace API.Controllers
         {
             ModelState.ClearValidationState(nameof(PostLike));
             var post = await repo.Posts.GetByID(postLike.PostID);
-            if (post == null || post.Status!=PostStatus.Active) return BadRequest("Post not found!");
+            if (post == null || post.Status != PostStatus.Active) return BadRequest("Post not found!");
             var currentUserID = GetCurrentUserID();
             var existingLike = await repo.PostLikes.GetByID(currentUserID.Value, postLike.PostID);
             if (existingLike != null) return BadRequest("User has liked this post");
@@ -43,14 +43,14 @@ namespace API.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpDelete("odata/{postId}")]
-        public async Task<IActionResult> Delete(int postId)
+        [HttpDelete("odata/[controller]/{keyPostID}")]
+        public async Task<IActionResult> Delete(int keyPostID)
         {
             var currentUserID = GetCurrentUserID();
             // if (currentUserID.Value != keyUserId) return Forbid();
-            var postLike = await repo.PostLikes.GetByID(currentUserID.Value, postId);
+            var postLike = await repo.PostLikes.GetByID(currentUserID.Value, keyPostID);
             if (postLike == null) return NotFound();
-            await repo.PostLikes.Delete(currentUserID.Value, postId);
+            await repo.PostLikes.Delete(currentUserID.Value, keyPostID);
             return NoContent();
         }
 

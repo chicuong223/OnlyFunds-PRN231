@@ -16,8 +16,6 @@ using OnlyFundsAPI.DataAccess.Interfaces;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ReportsController : ODataController
     {
         private readonly IRepoWrapper repo;
@@ -35,8 +33,8 @@ namespace API.Controllers
         }
 
         // GET: api/Reports/5
-        [HttpGet("{id}")]
-        public SingleResult<Report> GetReport(int key)
+        [EnableQuery]
+        public SingleResult<Report> Get(int key)
         {
             var report = repo.Reports.GetList().Where(e => e.ReportID == key);
 
@@ -45,7 +43,6 @@ namespace API.Controllers
 
         // PUT: api/Reports/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
         public async Task<IActionResult> Patch(int key, Delta<Report> report)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -60,12 +57,10 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
-
-
             try
             {
                 var existingReport = await repo.Reports.GetByID(key);
-                if (existingReport == null || existingReport.Status!=ReportStatus.Unresolved) return BadRequest("Comment not found!");
+                if (existingReport == null || existingReport.Status != ReportStatus.Unresolved) return BadRequest("Comment not found!");
                 var currentUserID = GetCurrentUserID();
                 if (existingReport.ReporterID != currentUserID) return Unauthorized("Modifying other users' comments is not allowed!");
                 report.Patch(existingReport);
@@ -75,16 +70,15 @@ namespace API.Controllers
             catch (Exception ex)
             {
                 if (ex is ArgumentException) return NotFound(ex.Message);
-                throw ;
+                throw;
             }
 
-            return NoContent();
         }
 
         // POST: api/Reports
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<Report>> Post([FromBody]Report report)
+        public async Task<ActionResult<Report>> Post([FromBody] Report report)
         {
             ModelState.ClearValidationState(nameof(Report));
 
@@ -106,12 +100,12 @@ namespace API.Controllers
         }
 
         // DELETE: api/Reports/5
-        public async Task<IActionResult> DeleteReport(int key)
+        public async Task<IActionResult> Delete(int key)
         {
             try
             {
                 var report = await repo.Reports.GetByID(key);
-                if (report == null || report.Status!=ReportStatus.Unresolved) return NotFound();
+                if (report == null || report.Status != ReportStatus.Unresolved) return NotFound();
 
                 //if current user is not admin
                 //check if current user is the uploader of the comment

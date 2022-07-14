@@ -62,7 +62,6 @@ namespace OnlyFundsAPI.API.Controllers
                     throw;
                 }
             }
-            return BadRequest(ModelState);
         }
 
         //update user

@@ -128,12 +128,15 @@ namespace API
             builder.EntitySet<PostLike>("PostLikes");
             builder.EntitySet<PostTag>("Tags");
             builder.EntitySet<User>("Users");
+            builder.EntitySet<Report>("Reports");
+            builder.EntitySet<PostTagMap>("PostTagMaps");
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
             builder.EntityType<PostLike>().HasKey(pLike => new { pLike.UserID, pLike.PostID });
             builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             builder.EntityType<PostLike>().HasKey(like => new { like.PostID, like.UserID });
+            builder.EntityType<PostTagMap>().HasKey(tagMap => new { tagMap.PostID, tagMap.TagID });
             return builder.GetEdmModel();
         }
     }

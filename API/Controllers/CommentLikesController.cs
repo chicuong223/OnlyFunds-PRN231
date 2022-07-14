@@ -41,7 +41,7 @@ namespace OnlyFundsAPI.API.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpDelete("odata/{keyCommentID}")]
+        [HttpDelete("odata/[controller]/{keyCommentID}")]
         public async Task<IActionResult> Delete(int keyCommentID)
         {
             var currentUserID = GetCurrentUserID();

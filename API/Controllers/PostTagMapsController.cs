@@ -35,7 +35,7 @@ namespace API.Controllers
         {
             ModelState.ClearValidationState(nameof(PostTagMap));
             var post = await repo.Posts.GetByID(postTagMap.PostID);
-            if (post == null || post.Status!=PostStatus.Active) return BadRequest("Post not found!");
+            if (post == null || post.Status != PostStatus.Active) return BadRequest("Post not found!");
             var currentUserID = GetCurrentUserID();
             if (post.UploaderID != currentUserID) return Forbid("You are forbiden to add new tag");
             var result = await repo.PostTagMaps.Create(postTagMap);
@@ -43,25 +43,25 @@ namespace API.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpDelete("odata/{postId}")]
-        public async Task<IActionResult> Delete(int postId)
+        [HttpDelete("odata/[controller]/{keyPostID}")]
+        public async Task<IActionResult> Delete(int keyPostID)
         {
             var currentUserID = GetCurrentUserID();
             // if (currentUserID.Value != keyTagId) return Forbid();
-            try 
+            try
             {
-            await repo.PostTagMaps.Delete(currentUserID.Value, postId);
+                await repo.PostTagMaps.Delete(currentUserID.Value, keyPostID);
             }
             catch
             {
-                var postTagMap = await repo.PostTagMaps.GetByID(currentUserID.Value, postId);
+                var postTagMap = await repo.PostTagMaps.GetByID(currentUserID.Value, keyPostID);
                 if (postTagMap == null) return NotFound();
                 else throw;
             }
             return NoContent();
         }
 
-         private int? GetCurrentUserID()
+        private int? GetCurrentUserID()
         {
             var result = this.User ?? throw new UnauthorizedAccessException("Not logged in!");
             var idStr = result.FindFirst("UserId");
