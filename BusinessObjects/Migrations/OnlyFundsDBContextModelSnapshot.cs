@@ -56,9 +56,7 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<int>("PostID")
                         .HasColumnType("int");
@@ -147,9 +145,7 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("nvarchar(3000)");
 
                     b.Property<bool>("IsRead")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("NotificationTime")
                         .HasColumnType("datetime2");
@@ -188,9 +184,7 @@ namespace BusinessObjects.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<int?>("AttachmentType")
                         .HasColumnType("int");
@@ -207,9 +201,7 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("nvarchar(1500)");
 
                     b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -252,9 +244,7 @@ namespace BusinessObjects.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<string>("TagName")
                         .IsRequired()
@@ -312,16 +302,14 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.HasKey("ReporterID");
 
                     b.HasIndex("ReporterID", "ReportedObjectID", "ReportType")
                         .IsUnique();
 
-                    b.ToTable("Report");
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.User", b =>
@@ -332,14 +320,10 @@ namespace BusinessObjects.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Banned")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("Email")
                         .IsRequired()
