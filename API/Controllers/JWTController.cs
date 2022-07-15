@@ -16,7 +16,7 @@ using OnlyFundsAPI.Utilities;
 namespace OnlyFundsAPI.API.Controllers
 {
     [ApiController]
-    [Route("api/authentication")]
+    [Route("odata/authentication")]
     public class JWTController : ControllerBase
     {
         public IConfiguration configuration;
