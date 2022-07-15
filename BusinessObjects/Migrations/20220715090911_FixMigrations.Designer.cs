@@ -10,8 +10,8 @@ using OnlyFundsAPI.BusinessObjects;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(OnlyFundsDBContext))]
-    [Migration("20220714101423_Initial")]
-    partial class Initial
+    [Migration("20220715090911_FixMigrations")]
+    partial class FixMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
