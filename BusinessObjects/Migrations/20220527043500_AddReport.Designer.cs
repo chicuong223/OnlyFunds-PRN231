@@ -10,8 +10,8 @@ using OnlyFundsAPI.BusinessObjects;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(OnlyFundsDBContext))]
-    [Migration("20220715044821_initialDb")]
-    partial class initialDb
+    [Migration("20220527043500_AddReport")]
+    partial class AddReport
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,13 +43,12 @@ namespace BusinessObjects.Migrations
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Comment", b =>
                 {
-                    b.Property<int?>("CommentID")
+                    b.Property<int>("CommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("CommentTime")
-                        .IsRequired()
+                    b.Property<DateTime>("CommentTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Content")
@@ -58,13 +57,14 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<int>("PostID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UploaderID")
-                        .IsRequired()
+                    b.Property<int>("UploaderID")
                         .HasColumnType("int");
 
                     b.HasKey("CommentID");
@@ -147,7 +147,9 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("nvarchar(3000)");
 
                     b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("NotificationTime")
                         .HasColumnType("datetime2");
@@ -162,22 +164,6 @@ namespace BusinessObjects.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserID", "Code");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("OTPs");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
                 {
                     b.Property<int>("PostID")
@@ -185,25 +171,21 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("AttachmentType")
+                    b.Property<int>("AttachmentType")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
 
-                    b.Property<string>("FileURL")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Preview")
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -223,6 +205,51 @@ namespace BusinessObjects.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostCategory", b =>
+                {
+                    b.Property<int>("CategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("CategoryID");
+
+                    b.HasIndex("CategoryName")
+                        .IsUnique();
+
+                    b.ToTable("PostCategories");
+                });
+
+            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostCategoryMap", b =>
+                {
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostID1")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryID", "PostID");
+
+                    b.HasIndex("PostID");
+
+                    b.HasIndex("PostID1");
+
+                    b.ToTable("PostCategoryMaps");
+                });
+
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostLike", b =>
                 {
                     b.Property<int>("PostID")
@@ -236,49 +263,6 @@ namespace BusinessObjects.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("PostLikes");
-                });
-
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostTag", b =>
-                {
-                    b.Property<int>("TagID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("TagName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("TagID");
-
-                    b.HasIndex("TagName")
-                        .IsUnique();
-
-                    b.ToTable("PostTags");
-                });
-
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostTagMap", b =>
-                {
-                    b.Property<int>("TagID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PostID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PostID1")
-                        .HasColumnType("int");
-
-                    b.HasKey("TagID", "PostID");
-
-                    b.HasIndex("PostID");
-
-                    b.HasIndex("PostID1");
-
-                    b.ToTable("PostTagMaps");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Report", b =>
@@ -304,14 +288,16 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("ReporterID");
 
                     b.HasIndex("ReporterID", "ReportedObjectID", "ReportType")
                         .IsUnique();
 
-                    b.ToTable("Reports");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.User", b =>
@@ -322,10 +308,14 @@ namespace BusinessObjects.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Active")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("Banned")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -469,17 +459,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Receiver");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.User", "User")
-                        .WithOne("OTP")
-                        .HasForeignKey("OnlyFundsAPI.BusinessObjects.OTP", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
                 {
                     b.HasOne("OnlyFundsAPI.BusinessObjects.User", "Uploader")
@@ -489,6 +468,29 @@ namespace BusinessObjects.Migrations
                         .IsRequired();
 
                     b.Navigation("Uploader");
+                });
+
+            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostCategoryMap", b =>
+                {
+                    b.HasOne("OnlyFundsAPI.BusinessObjects.PostCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnlyFundsAPI.BusinessObjects.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnlyFundsAPI.BusinessObjects.Post", null)
+                        .WithMany("CategoryMaps")
+                        .HasForeignKey("PostID1");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostLike", b =>
@@ -508,29 +510,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostTagMap", b =>
-                {
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.Post", null)
-                        .WithMany("TagMaps")
-                        .HasForeignKey("PostID1");
-
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.PostTag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Report", b =>
@@ -553,11 +532,11 @@ namespace BusinessObjects.Migrations
                 {
                     b.Navigation("Bookmarks");
 
+                    b.Navigation("CategoryMaps");
+
                     b.Navigation("Comments");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("TagMaps");
                 });
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.User", b =>
@@ -569,8 +548,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Followers");
 
                     b.Navigation("Follows");
-
-                    b.Navigation("OTP");
 
                     b.Navigation("Posts");
                 });
