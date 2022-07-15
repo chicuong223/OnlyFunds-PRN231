@@ -41,6 +41,13 @@ namespace API
             {
                 options.Select().SetMaxTop(20).Filter().OrderBy().Count().AddRouteComponents("odata", GetEdmModel());
             });
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -111,10 +118,7 @@ namespace API
 
             app.UseAuthorization();
 
-            app.UseCors(builder =>
-            {
-                builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-            });
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
