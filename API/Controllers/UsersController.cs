@@ -117,5 +117,28 @@ namespace OnlyFundsAPI.API.Controllers
             }
         }
 
+        //Change Password
+        [HttpPost("odata/[controller]/change-password")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> ChangePassword(string newPassword, string confirmPassword)
+        {
+            var userID = GetCurrentUserID().Value;
+            var user = await repo.Users.GetUserByID(userID);
+            if (user == null) return BadRequest("User not found!");
+            if (!user.Active || user.Banned) return Forbid("Your account is not active!");
+            string hashedPassword = Utilities.PasswordUtils.HashString(newPassword);
+            string hashedConfirmPassword = Utilities.PasswordUtils.HashString(confirmPassword);
+            if (!hashedPassword.Equals(hashedConfirmPassword)) return BadRequest("Confirm password does not match!");
+            user.Password = hashedPassword;
+            await repo.Users.Update(user);
+            return Updated(user);
+        }
+        private int? GetCurrentUserID()
+        {
+            var result = this.User ?? throw new UnauthorizedAccessException("Not logged in!");
+            var idStr = result.FindFirst("UserId");
+            if (idStr != null) return Int32.Parse(idStr.Value);
+            return null;
+        }
     }
 }
