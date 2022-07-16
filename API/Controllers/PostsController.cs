@@ -49,10 +49,28 @@ namespace API.Controllers
             {
                 var currentUserID = GetCurrentUserID();
                 if (currentUserID == null) return Unauthorized();
+                var currentUser = await repo.Users.GetUserByID(currentUserID.Value);
+                if (currentUser.Banned || !currentUser.Active) return Forbid("Action not allowed!");
                 post.UploaderID = currentUserID.Value;
                 post.UploadTime = DateTime.Now;
                 if (!TryValidateModel(post)) return BadRequest();
                 var result = await repo.Posts.Create(post);
+                var follows = repo.Follows.GetList().Where(f => f.FolloweeID == currentUserID.Value);
+                if (follows.Count() > 0)
+                {
+                    Notification noti = null;
+                    foreach (var follow in follows)
+                    {
+                        noti = new Notification
+                        {
+                            IsRead = false,
+                            NotificationTime = DateTime.Now,
+                            ReceiverID = follow.FollowerID,
+                            Content = $"{currentUser.Username} has uploaded a new post!"
+                        };
+                        await repo.Notifications.Create(noti);
+                    }
+                }
                 return Created(result);
             }
             catch (Exception ex)
