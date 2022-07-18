@@ -1,8 +1,5 @@
 ﻿using OnlyFundsAPI.BusinessObjects;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
@@ -10,9 +7,13 @@ namespace DataAccess.Interfaces
     public interface IBookmarkRepository
     {
         IQueryable<Bookmark> GetList();
+
         Task<Bookmark> GetBookmark(int userId, int postId);
+
         Task<Bookmark> Create(Bookmark bookmark);
+
         Task<Bookmark> Update(Bookmark bookmark);
+
         Task Delete(int userId, int postId);
     }
 }

@@ -1,17 +1,17 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.Configuration;
+
 // using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using OnlyFundsAPI.API.Models;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using OnlyFundsAPI.Utilities;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.API.Controllers
 {
@@ -21,6 +21,7 @@ namespace OnlyFundsAPI.API.Controllers
     {
         public IConfiguration configuration;
         private readonly IRepoWrapper repo;
+
         public JWTController(IConfiguration configuration, IRepoWrapper repo)
         {
             this.configuration = configuration;

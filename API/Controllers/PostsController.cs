@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    public class PostsController : ODataController
+    [ApiController]
+    [Route("odata/[controller]")]
+    public class PostsController : ControllerBase
     {
         private readonly IRepoWrapper repo;
 
@@ -26,6 +25,7 @@ namespace API.Controllers
         }
 
         [EnableQuery]
+        [HttpGet]
         public IActionResult Get()
         {
             var result = repo.Posts.GetList();
@@ -33,37 +33,80 @@ namespace API.Controllers
         }
 
         [EnableQuery]
-        public SingleResult<Post> Get(int key)
+        [HttpGet("{key}")]
+        public SingleResult<Post> GetByID(int key)
         {
             var result = repo.Posts.GetList().Where(cmt => cmt.PostID == key);
             return SingleResult.Create(result);
         }
 
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> Post([FromBody] Post post)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Post post)
         {
             // System.Console.WriteLine(ModelState.IsValid);
             // if (!ModelState.IsValid) return BadRequest(ModelState);
+            System.Console.WriteLine(post == null);
             ModelState.ClearValidationState(nameof(Post));
             try
             {
                 var currentUserID = GetCurrentUserID();
                 if (currentUserID == null) return Unauthorized();
+                var currentUser = await repo.Users.GetUserByID(currentUserID.Value);
+                if (currentUser.Banned || !currentUser.Active) return Unauthorized("Action not allowed!");
                 post.UploaderID = currentUserID.Value;
                 post.UploadTime = DateTime.Now;
                 if (!TryValidateModel(post)) return BadRequest();
-                var result = await repo.Posts.Create(post);
-                return Created(result);
+                var newPost = new Post
+                {
+                    Active = true,
+                    AttachmentType = post.AttachmentType,
+                    Description = post.Description,
+                    FileURL = post.FileURL,
+                    Preview = post.Preview,
+                    Status = 0,
+                    Title = post.Title,
+                    UploaderID = post.UploaderID,
+                    UploadTime = DateTime.Now
+                };
+                var result = await repo.Posts.Create(newPost);
+                foreach (var map in post.TagMaps)
+                {
+                    var newMap = new PostTagMap
+                    {
+                        TagID = map.TagID,
+                        PostID = result.PostID
+                    };
+                    await repo.PostTagMaps.Create(newMap);
+                }
+
+                var follows = repo.Follows.GetList().Where(f => f.FolloweeID == currentUserID.Value);
+                if (follows.Count() > 0)
+                {
+                    Notification noti = null;
+                    foreach (var follow in follows)
+                    {
+                        noti = new Notification
+                        {
+                            IsRead = false,
+                            NotificationTime = DateTime.Now,
+                            ReceiverID = follow.FollowerID,
+                            Content = $"{currentUser.Username} has uploaded a new post!"
+                        };
+                        await repo.Notifications.Create(noti);
+                    }
+                }
+                return CreatedAtAction(nameof(GetByID), new { key = result.PostID }, result);
             }
-            catch (Exception ex)
+            catch
             {
-                if (ex is ArgumentException) return BadRequest(ex.Message);
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> Patch(int key, Delta<Post> post)
+        [HttpPatch("{key}")]
+        public async Task<IActionResult> Patch(int key, [FromBody] Delta<Post> post)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
@@ -74,7 +117,7 @@ namespace API.Controllers
                 if (existingPost.UploaderID != currentUserID) return Unauthorized("Modifying other users' posts is not allowed!");
                 post.Patch(existingPost);
                 var result = await repo.Posts.Update(existingPost);
-                return Updated(result);
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -83,6 +126,7 @@ namespace API.Controllers
             }
         }
 
+        [HttpDelete("{key}")]
         public async Task<IActionResult> Delete(int key)
         {
             try

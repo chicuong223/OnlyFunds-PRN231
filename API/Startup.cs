@@ -1,19 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
@@ -21,6 +12,8 @@ using Microsoft.OpenApi.Models;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Implementations;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace API
 {
@@ -36,11 +29,11 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers().AddOData(options =>
             {
-                options.Select().SetMaxTop(20).Filter().OrderBy().Count().AddRouteComponents("odata", GetEdmModel());
-            });
+                options.Select().SetMaxTop(20).Filter().OrderBy().Count().Expand().AddRouteComponents("odata", GetEdmModel());
+            }).AddJsonOptions(x =>
+                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve); ;
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -114,15 +107,15 @@ namespace API
 
             app.UseRouting();
 
+            app.UseCors("CorsPolicy");
+
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseCors("CorsPolicy");
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireAuthorization();
             });
         }
 
@@ -139,14 +132,15 @@ namespace API
             builder.EntitySet<User>("Users");
             builder.EntitySet<Report>("Reports");
             builder.EntitySet<PostTagMap>("PostTagMaps");
-            builder.EntitySet<Post>("Posts");
+            // builder.EntitySet<Post>("Posts");
+            // builder.EntityType<Post>().HasKey(p => p.PostID);
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
             builder.EntityType<PostLike>().HasKey(pLike => new { pLike.UserID, pLike.PostID });
             builder.EntityType<PostTag>().HasKey(tag => tag.TagID);
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             builder.EntityType<PostLike>().HasKey(like => new { like.PostID, like.UserID });
-            builder.EntityType<PostTagMap>().HasKey(tagMap => new { tagMap.PostID, tagMap.TagID });
+            builder.EntityType<PostTagMap>().HasKey(tagMap => new { tagMap.TagID, tagMap.PostID });
             return builder.GetEdmModel();
         }
     }

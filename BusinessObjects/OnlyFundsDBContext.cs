@@ -1,6 +1,6 @@
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace OnlyFundsAPI.BusinessObjects
 {
@@ -21,7 +21,6 @@ namespace OnlyFundsAPI.BusinessObjects
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<OTP> OTPs { get; set; }
         public DbSet<Report> Reports { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -60,6 +59,8 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.Property(user => user.Banned);
                 entity.Property(user => user.Active);
+                entity.Property(user => user.AvatarUrl)
+                    .HasMaxLength(256);
             });
 
             builder.Entity<Post>(entity =>
@@ -120,7 +121,7 @@ namespace OnlyFundsAPI.BusinessObjects
                     .WithMany()
                     .HasForeignKey(pc => pc.TagID);
                 entity.HasOne(pc => pc.Post)
-                    .WithMany()
+                    .WithMany(post => post.TagMaps)
                     .HasForeignKey(pc => pc.PostID);
             });
 
@@ -234,14 +235,6 @@ namespace OnlyFundsAPI.BusinessObjects
                 entity.Property(report => report.Status)
                     .IsRequired();
                 entity.Property(report => report.ReportTime)
-                    .IsRequired();
-            });
-
-            builder.Entity<OTP>(entity =>
-            {
-                entity.HasKey(otp => new { otp.UserID, otp.Code });
-                entity.HasOne(otp => otp.User)
-                    .WithOne(user => user.OTP)
                     .IsRequired();
             });
         }

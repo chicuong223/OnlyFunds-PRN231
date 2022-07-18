@@ -2,11 +2,6 @@
 using DataAccess.Interfaces;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Implementations
 {
@@ -24,10 +19,12 @@ namespace OnlyFundsAPI.DataAccess.Implementations
         private IReportRepository _reports;
         private INotificationRepository _notifications;
         private readonly OnlyFundsDBContext _dbContext;
+
         public RepoWrapper(OnlyFundsDBContext context)
         {
             _dbContext = context;
         }
+
         public IUserRepository Users
         {
             get

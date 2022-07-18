@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
@@ -9,12 +6,16 @@ using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.API.Controllers
 {
     public class TagsController : ODataController
     {
         private readonly IRepoWrapper repo;
+
         public TagsController(IRepoWrapper repo)
         {
             this.repo = repo;

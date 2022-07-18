@@ -1,18 +1,18 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.API.Controllers
 {
     public class CommentLikesController : ODataController
     {
         private readonly IRepoWrapper repo;
+
         public CommentLikesController(IRepoWrapper repo)
         {
             this.repo = repo;

@@ -6,8 +6,10 @@ namespace OnlyFundsAPI.BusinessObjects
     {
         [Description("Active")]
         Active,
+
         [Description("Inactive")]
         Inactive,
+
         [Description("Banned")]
         Banned
     }
