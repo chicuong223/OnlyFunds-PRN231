@@ -1,23 +1,24 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class CommentLikeRepository : ICommentLikeRepository
     {
         private readonly OnlyFundsDBContext context;
+
         public CommentLikeRepository(OnlyFundsDBContext context)
         {
             this.context = context;
         }
+
         public async Task<CommentLike> Create(CommentLike commentLike)
         {
             try
             {
-
                 await context.CommentLikes.AddAsync(commentLike);
                 await context.SaveChangesAsync();
             }

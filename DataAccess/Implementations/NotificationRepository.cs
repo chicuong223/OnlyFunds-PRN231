@@ -2,20 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Implementations
 {
-    class NotificationRepository : INotificationRepository
+    internal class NotificationRepository : INotificationRepository
     {
         private readonly OnlyFundsDBContext context;
+
         public NotificationRepository(OnlyFundsDBContext context)
         {
             this.context = context;
         }
+
         public async Task<Notification> Create(Notification notification)
         {
             try
@@ -64,7 +64,7 @@ namespace DataAccess.Implementations
             try
             {
                 result = await context.Notifications
-                    .SingleOrDefaultAsync(e=>e.NotificationID == id);
+                    .SingleOrDefaultAsync(e => e.NotificationID == id);
             }
             catch
             {

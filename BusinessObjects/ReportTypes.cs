@@ -6,8 +6,10 @@ namespace OnlyFundsAPI.BusinessObjects
     {
         [Description("Post")]
         Post,
+
         [Description("Comment")]
         Comment,
+
         [Description("User")]
         User
     }

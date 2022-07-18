@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
@@ -10,6 +7,9 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using OnlyFundsAPI.Utilities;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.API.Controllers
 {
@@ -19,6 +19,7 @@ namespace OnlyFundsAPI.API.Controllers
     {
         // private readonly IUserRepository userRepository;
         private readonly IRepoWrapper repo;
+
         public UsersController(IRepoWrapper repo)
         {
             // this.userRepository = userRepository;
@@ -133,6 +134,7 @@ namespace OnlyFundsAPI.API.Controllers
             await repo.Users.Update(user);
             return Updated(user);
         }
+
         private int? GetCurrentUserID()
         {
             var result = this.User ?? throw new UnauthorizedAccessException("Not logged in!");

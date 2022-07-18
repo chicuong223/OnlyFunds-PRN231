@@ -1,22 +1,21 @@
 ﻿using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
-using OnlyFundsAPI.DataAccess.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Implementations
 {
-    class BookmarkRepository : IBookmarkRepository
+    internal class BookmarkRepository : IBookmarkRepository
     {
         private readonly OnlyFundsDBContext context;
+
         public BookmarkRepository(OnlyFundsDBContext context)
         {
             this.context = context;
         }
+
         public async Task<Bookmark> Create(Bookmark bookMark)
         {
             try
@@ -80,7 +79,7 @@ namespace DataAccess.Implementations
         {
             try
             {
-                if (await context.Bookmarks.AnyAsync(e=>e.PostID==bookmark.PostID&&e.UserID==bookmark.UserID))
+                if (await context.Bookmarks.AnyAsync(e => e.PostID == bookmark.PostID && e.UserID == bookmark.UserID))
                 {
                     context.Bookmarks.Update(bookmark);
                     await context.SaveChangesAsync();

@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Implementations
@@ -22,16 +20,16 @@ namespace DataAccess.Implementations
         {
             try
             {
-                if(!await context.Posts.AnyAsync(e=>e.PostID == post.PostID))
-                {
-                    await context.Posts.AddAsync(post);
-                    await context.SaveChangesAsync();
-                    return post;
-                }
-                else
-                {
-                    throw new ArgumentException("Post existed");
-                }
+                // if (!await context.Posts.AnyAsync(e => e.PostID == post.PostID))
+                // {
+                await context.Posts.AddAsync(post);
+                await context.SaveChangesAsync();
+                return post;
+                // }
+                // else
+                // {
+                //     throw new ArgumentException("Post existed");
+                // }
             }
             catch
             {
@@ -44,7 +42,7 @@ namespace DataAccess.Implementations
             try
             {
                 Post post = await context.Posts.SingleOrDefaultAsync(e => e.PostID == id);
-                if(post != null)
+                if (post != null)
                 {
                     context.Posts.Remove(post);
                     await context.SaveChangesAsync();

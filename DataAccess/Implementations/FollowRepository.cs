@@ -1,25 +1,26 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class FollowRepository : IFollowRepository
     {
         private readonly OnlyFundsDBContext context;
+
         public FollowRepository(OnlyFundsDBContext context)
         {
             this.context = context;
             this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
+
         public async Task<Follow> Create(Follow follow)
         {
             try
             {
-
                 if (follow.FolloweeID == follow.FollowerID) throw new ArgumentException("Users can't follow themselves");
                 var exist = await context.Follows
                     .SingleOrDefaultAsync(f => f.FollowerID == follow.FollowerID && f.FolloweeID == follow.FolloweeID);

@@ -1,17 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using OnlyFundsAPI.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class UserRepository : IUserRepository
     {
         private readonly OnlyFundsDBContext context;
+
         public UserRepository(OnlyFundsDBContext context)
         {
             this.context = context;

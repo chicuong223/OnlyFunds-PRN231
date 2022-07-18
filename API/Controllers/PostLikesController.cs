@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -20,6 +17,7 @@ namespace API.Controllers
         {
             this.repo = repo;
         }
+
         [EnableQuery]
         public async Task<IActionResult> Get(int keyUserId, int keyPostId)
         {

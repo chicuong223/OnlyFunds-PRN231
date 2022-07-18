@@ -1,21 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.DataAccess.Implementations
 {
     public class TagRepository : ITagRepository
     {
         private readonly OnlyFundsDBContext context;
+
         public TagRepository(OnlyFundsDBContext context)
         {
             this.context = context;
             this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
+
         public async Task<PostTag> Create(PostTag tag)
         {
             PostTag result = null;
@@ -25,7 +26,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                     .FirstOrDefaultAsync(t => t.TagName.ToLower().Equals(tag.TagName.ToLower()));
 
                 //check if a tag with input name exists
-                //if tag exists: 
+                //if tag exists:
                 //check if it is active
                 //if not, change to active
                 //else, throw ArgumentException

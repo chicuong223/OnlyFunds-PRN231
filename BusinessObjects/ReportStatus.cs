@@ -6,8 +6,10 @@ namespace OnlyFundsAPI.BusinessObjects
     {
         [Description("Unresolved")]
         Unresolved,
+
         [Description("Resolved")]
         Resolved,
+
         [Description("Rejected")]
         Rejected
     }

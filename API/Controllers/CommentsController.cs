@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
@@ -10,12 +6,17 @@ using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OnlyFundsAPI.API.Controllers
 {
     public class CommentsController : ODataController
     {
         private readonly IRepoWrapper repo;
+
         public CommentsController(IRepoWrapper repo)
         {
             this.repo = repo;
