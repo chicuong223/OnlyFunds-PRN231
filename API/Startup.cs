@@ -31,7 +31,7 @@ namespace API
         {
             services.AddControllers().AddOData(options =>
             {
-                options.Select().SetMaxTop(20).Filter().OrderBy().Count().AddRouteComponents("odata", GetEdmModel());
+                options.Select().SetMaxTop(20).Filter().OrderBy().Count().Expand().AddRouteComponents("odata", GetEdmModel());
             }).AddJsonOptions(x =>
                             x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve); ;
             services.AddCors(opt =>
