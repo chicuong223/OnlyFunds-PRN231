@@ -60,6 +60,8 @@ namespace OnlyFundsAPI.BusinessObjects
                     .IsRequired();
                 entity.Property(user => user.Banned);
                 entity.Property(user => user.Active);
+                entity.Property(user => user.AvatarUrl)
+                    .HasMaxLength(256);
             });
 
             builder.Entity<Post>(entity =>
