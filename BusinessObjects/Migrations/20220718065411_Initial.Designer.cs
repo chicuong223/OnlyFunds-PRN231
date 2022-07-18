@@ -10,8 +10,8 @@ using OnlyFundsAPI.BusinessObjects;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(OnlyFundsDBContext))]
-    [Migration("20220718035137_NewMigration")]
-    partial class NewMigration
+    [Migration("20220718065411_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -162,22 +162,6 @@ namespace BusinessObjects.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserID", "Code");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("OTPs");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
                 {
                     b.Property<int>("PostID")
@@ -269,14 +253,9 @@ namespace BusinessObjects.Migrations
                     b.Property<int>("PostID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PostID1")
-                        .HasColumnType("int");
-
                     b.HasKey("TagID", "PostID");
 
                     b.HasIndex("PostID");
-
-                    b.HasIndex("PostID1");
 
                     b.ToTable("PostTagMaps");
                 });
@@ -473,17 +452,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Receiver");
                 });
 
-            modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.OTP", b =>
-                {
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.User", "User")
-                        .WithOne("OTP")
-                        .HasForeignKey("OnlyFundsAPI.BusinessObjects.OTP", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Post", b =>
                 {
                     b.HasOne("OnlyFundsAPI.BusinessObjects.User", "Uploader")
@@ -517,14 +485,10 @@ namespace BusinessObjects.Migrations
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.PostTagMap", b =>
                 {
                     b.HasOne("OnlyFundsAPI.BusinessObjects.Post", "Post")
-                        .WithMany()
+                        .WithMany("TagMaps")
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("OnlyFundsAPI.BusinessObjects.Post", null)
-                        .WithMany("TagMaps")
-                        .HasForeignKey("PostID1");
 
                     b.HasOne("OnlyFundsAPI.BusinessObjects.PostTag", "Tag")
                         .WithMany()
@@ -573,8 +537,6 @@ namespace BusinessObjects.Migrations
                     b.Navigation("Followers");
 
                     b.Navigation("Follows");
-
-                    b.Navigation("OTP");
 
                     b.Navigation("Posts");
                 });

@@ -76,6 +76,8 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                 {
                     throw new ArgumentException("Email is used!");
                 }
+                user.Active = true;
+                user.Banned = false;
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
                 return user;
