@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -18,12 +20,19 @@ namespace API.Controllers
             this.repo = repo;
         }
 
+
         [EnableQuery]
-        public async Task<IActionResult> Get(int keyUserId, int keyPostId)
+        public IActionResult GetPostLikes()
         {
-            var result = await repo.PostLikes.GetByID(keyUserId, keyPostId);
-            if (result == null) return NotFound();
+            var result = repo.PostLikes.GetList();
             return Ok(result);
+        }
+
+        [EnableQuery]
+        public SingleResult<PostLike> Get(int keyUserID, int keyPostID)
+        {
+            var result = repo.PostLikes.GetList().Where(like => like.UserID == keyUserID && like.PostID == keyPostID);
+            return SingleResult.Create(result);
         }
 
         [Authorize(Roles = "User")]
@@ -59,5 +68,6 @@ namespace API.Controllers
             if (idStr != null) return Int32.Parse(idStr.Value);
             return null;
         }
+
     }
 }
