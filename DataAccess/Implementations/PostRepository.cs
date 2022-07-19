@@ -44,7 +44,8 @@ namespace DataAccess.Implementations
                 Post post = await context.Posts.SingleOrDefaultAsync(e => e.PostID == id);
                 if (post != null)
                 {
-                    context.Posts.Remove(post);
+                    post.Active = !post.Active;
+                    context.Posts.Update(post);
                     await context.SaveChangesAsync();
                 }
                 else
