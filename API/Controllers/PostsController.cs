@@ -127,6 +127,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{key}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int key)
         {
             try
