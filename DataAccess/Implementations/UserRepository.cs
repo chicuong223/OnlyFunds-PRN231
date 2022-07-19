@@ -53,7 +53,7 @@ namespace OnlyFundsAPI.DataAccess.Implementations
             {
                 result = await context.Users
                     .SingleOrDefaultAsync(user => user.Username.Equals(username)
-                        && user.Password.Equals(PasswordUtils.HashString(password)));
+                        && user.Password.Equals(PasswordUtils.HashString(password)) && user.Active && !user.Banned);
             }
             catch
             {
