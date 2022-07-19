@@ -42,6 +42,7 @@ namespace API.Controllers
             var post = await repo.Posts.GetByID(postLike.PostID);
             if (post == null || post.Status != PostStatus.Active) return BadRequest("Post not found!");
             var currentUserID = GetCurrentUserID();
+            if (post.UploaderID == currentUserID) return BadRequest("You cannot like your own posts!");
             var existingLike = await repo.PostLikes.GetByID(currentUserID.Value, postLike.PostID);
             if (existingLike != null) return BadRequest("User has liked this post");
             postLike.UserID = currentUserID.Value;

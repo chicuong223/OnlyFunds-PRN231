@@ -27,7 +27,7 @@ namespace DataAccess.Implementations
                 }
                 else
                 {
-                    throw new ArgumentException("Notification existed");
+                    throw new ArgumentException("User has already liked this post");
                 }
             }
             catch
@@ -60,22 +60,16 @@ namespace DataAccess.Implementations
 
         public async Task<PostLike> GetByID(int likerId, int postId)
         {
+            PostLike postLike = null;
             try
             {
-                PostLike postLike = await context.PostLikes.SingleOrDefaultAsync(e => e.UserID == likerId && e.PostID == postId);
-                if (postLike != null)
-                {
-                    return postLike;
-                }
-                else
-                {
-                    throw new ArgumentException("Post Like not found");
-                }
+                postLike = await context.PostLikes.SingleOrDefaultAsync(e => e.UserID == likerId && e.PostID == postId);
             }
             catch
             {
                 throw;
             }
+            return postLike;
         }
 
         public IQueryable<PostLike> GetList()
