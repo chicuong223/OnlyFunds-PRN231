@@ -32,8 +32,11 @@ namespace API
             services.AddControllers().AddOData(options =>
             {
                 options.Select().SetMaxTop(20).Filter().OrderBy().Count().Expand().AddRouteComponents("odata", GetEdmModel());
-            }).AddJsonOptions(x =>
-                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve); ;
+            }).AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); ;
+            // .AddJsonOptions(x =>
+            // {
+            //     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            // });
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>

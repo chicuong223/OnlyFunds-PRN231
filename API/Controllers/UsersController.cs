@@ -44,7 +44,6 @@ namespace OnlyFundsAPI.API.Controllers
         }
 
         //Create user
-        [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] User user)
         {
             //if (ModelState.IsValid)

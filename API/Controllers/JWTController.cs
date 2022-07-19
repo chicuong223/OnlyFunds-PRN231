@@ -28,7 +28,6 @@ namespace OnlyFundsAPI.API.Controllers
             this.configuration = configuration;
             this.repo = repo;
         }
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
