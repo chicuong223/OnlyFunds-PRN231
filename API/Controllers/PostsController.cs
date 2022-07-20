@@ -55,7 +55,7 @@ namespace API.Controllers
                 var currentUser = await repo.Users.GetUserByID(currentUserID.Value);
                 if (currentUser.Banned || !currentUser.Active) return Unauthorized("Action not allowed!");
                 post.UploaderID = currentUserID.Value;
-                post.UploadTime = DateTime.Now;
+                // post.UploadTime = DateTime.Now;
                 if (!TryValidateModel(post)) return BadRequest();
                 var newPost = new Post
                 {
@@ -126,9 +126,9 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("id/{key}")]
+        [HttpDelete("{key}")]
         [Authorize]
-        public async Task<IActionResult> Delete(int key)
+        public async Task<IActionResult> Remove(int key)
         {
             try
             {
