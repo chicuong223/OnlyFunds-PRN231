@@ -43,7 +43,7 @@ namespace API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         public async Task<IActionResult> Patch(int key, Delta<Report> report)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            // if (!ModelState.IsValid) return BadRequest(ModelState);
 
             object deltaId;
             bool foundId = report.TryGetPropertyValue("ReportID", out deltaId);
