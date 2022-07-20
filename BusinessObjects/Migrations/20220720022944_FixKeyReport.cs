@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BusinessObjects.Migrations
 {
-    public partial class Initial : Migration
+    public partial class FixKeyReport : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -116,8 +116,9 @@ namespace BusinessObjects.Migrations
                 name: "Reports",
                 columns: table => new
                 {
+                    ReportID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ReporterID = table.Column<int>(type: "int", nullable: false),
-                    ReportID = table.Column<int>(type: "int", nullable: false),
                     ReportedObjectID = table.Column<int>(type: "int", nullable: false),
                     ReportType = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
@@ -126,7 +127,7 @@ namespace BusinessObjects.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reports", x => x.ReporterID);
+                    table.PrimaryKey("PK_Reports", x => x.ReportID);
                     table.ForeignKey(
                         name: "FK_Reports_Users_ReporterID",
                         column: x => x.ReporterID,
