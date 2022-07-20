@@ -74,14 +74,16 @@ namespace DataAccess.Implementations
 
         public IQueryable<Post> GetList()
         {
+            IQueryable<Post> result;
             try
             {
-                return context.Posts.AsQueryable();
+                result = context.Posts.AsQueryable();
             }
             catch
             {
                 throw;
             }
+            return result;
         }
 
         public async Task<Post> Update(Post post)

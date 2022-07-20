@@ -135,8 +135,8 @@ namespace API
             builder.EntitySet<User>("Users");
             builder.EntitySet<Report>("Reports");
             builder.EntitySet<PostTagMap>("PostTagMaps");
-            // builder.EntitySet<Post>("Posts");
-            // builder.EntityType<Post>().HasKey(p => p.PostID);
+            builder.EntitySet<Post>("Posts");
+            builder.EntityType<Post>().HasKey(p => p.PostID);
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
             builder.EntityType<PostLike>().HasKey(pLike => new { pLike.UserID, pLike.PostID });

@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [EnableQuery]
-        [HttpGet]
+        [HttpGet("list")]
         public IActionResult Get()
         {
             var result = repo.Posts.GetList();
@@ -106,7 +106,7 @@ namespace API.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPatch("{key}")]
-        public async Task<IActionResult> Patch(int key, [FromBody] Delta<Post> post)
+        public async Task<IActionResult> Update(int key, [FromBody] Delta<Post> post)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
@@ -126,14 +126,14 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("{key}")]
+        [HttpDelete("id/{key}")]
         [Authorize]
         public async Task<IActionResult> Delete(int key)
         {
             try
             {
                 var post = await repo.Posts.GetByID(key);
-                if (post == null) return NotFound();
+                if (post == null || post.Status != PostStatus.Active) return NotFound();
 
                 //if current user is not admin
                 //check if current user is the uploader of the post
