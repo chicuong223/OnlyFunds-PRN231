@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -18,12 +20,19 @@ namespace API.Controllers
             this.repo = repo;
         }
 
+
         [EnableQuery]
-        public async Task<IActionResult> Get(int keyUserId, int keyPostId)
+        public IActionResult GetPostLikes()
         {
-            var result = await repo.PostLikes.GetByID(keyUserId, keyPostId);
-            if (result == null) return NotFound();
+            var result = repo.PostLikes.GetList();
             return Ok(result);
+        }
+
+        [EnableQuery]
+        public SingleResult<PostLike> Get(int keyUserID, int keyPostID)
+        {
+            var result = repo.PostLikes.GetList().Where(like => like.UserID == keyUserID && like.PostID == keyPostID);
+            return SingleResult.Create(result);
         }
 
         [Authorize(Roles = "User")]
@@ -33,6 +42,7 @@ namespace API.Controllers
             var post = await repo.Posts.GetByID(postLike.PostID);
             if (post == null || post.Status != PostStatus.Active) return BadRequest("Post not found!");
             var currentUserID = GetCurrentUserID();
+            if (post.UploaderID == currentUserID) return BadRequest("You cannot like your own posts!");
             var existingLike = await repo.PostLikes.GetByID(currentUserID.Value, postLike.PostID);
             if (existingLike != null) return BadRequest("User has liked this post");
             postLike.UserID = currentUserID.Value;
@@ -59,5 +69,6 @@ namespace API.Controllers
             if (idStr != null) return Int32.Parse(idStr.Value);
             return null;
         }
+
     }
 }

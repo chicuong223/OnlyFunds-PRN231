@@ -133,7 +133,7 @@ namespace API.Controllers
             try
             {
                 var post = await repo.Posts.GetByID(key);
-                if (post == null || post.Status != PostStatus.Active) return NotFound();
+                if (post == null) return NotFound();
 
                 //if current user is not admin
                 //check if current user is the uploader of the post
