@@ -86,7 +86,7 @@ namespace API.Controllers
             // if (currentUserID.Value != keyUserId) return Forbid();
             try
             {
-                await _repo.CommentLikes.Delete(currentUserID.Value, keyPostID);
+                await _repo.Bookmarks.Delete(currentUserID.Value, keyPostID);
             }
             catch
             {
