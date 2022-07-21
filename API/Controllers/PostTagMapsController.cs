@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using OnlyFundsAPI.BusinessObjects;
 using OnlyFundsAPI.DataAccess.Interfaces;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -18,13 +19,21 @@ namespace API.Controllers
             this.repo = repo;
         }
 
+
         [EnableQuery]
-        public async Task<IActionResult> Get(int keyTagId, int keyPostId)
+        public IQueryable<PostTagMap> Get()
         {
-            var result = await repo.PostTagMaps.GetByID(keyTagId, keyPostId);
+            return repo.PostTagMaps.GetList();
+        }
+
+        [EnableQuery]
+        public async Task<IActionResult> Get(int keyTagID, int keyPostID)
+        {
+            var result = await repo.PostTagMaps.GetByID(keyTagID, keyPostID);
             if (result == null) return NotFound();
             return Ok(result);
         }
+
 
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Post([FromBody] PostTagMap postTagMap)
