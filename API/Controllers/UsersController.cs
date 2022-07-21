@@ -81,7 +81,7 @@ namespace OnlyFundsAPI.API.Controllers
                 }
                 object pass = "";
                 var value = user.TryGetPropertyValue("Password", out pass);
-                if (pass != null)
+                if (pass != null && !string.IsNullOrEmpty(pass.ToString()))
                 {
                     user.TrySetPropertyValue("Password", PasswordUtils.HashString(pass.ToString()));
                 }
