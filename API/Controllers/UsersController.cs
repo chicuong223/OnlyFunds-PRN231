@@ -81,11 +81,42 @@ namespace OnlyFundsAPI.API.Controllers
                 }
                 object pass = "";
                 var value = user.TryGetPropertyValue("Password", out pass);
-                if (pass != null && !string.IsNullOrEmpty(pass.ToString()))
+                if (pass != null && !string.IsNullOrEmpty(pass.ToString().Trim()))
                 {
                     user.TrySetPropertyValue("Password", PasswordUtils.HashString(pass.ToString()));
+                    user.Patch(existingUser);
                 }
-                user.Patch(existingUser);
+                else
+                {
+                    Delta<User> newDelta = new Delta<User>();
+                    if (user.TryGetPropertyValue("Username", out object username))
+                    {
+                        if (username != null && !string.IsNullOrEmpty(username.ToString()))
+                            newDelta.TrySetPropertyValue("Username", username);
+                    }
+                    if (user.TryGetPropertyValue("Email", out object email))
+                    {
+                        if (email != null && !string.IsNullOrEmpty(email.ToString()))
+                            newDelta.TrySetPropertyValue("Email", email);
+                    }
+                    if (user.TryGetPropertyValue("FirstName", out object firstName))
+                    {
+                        if (firstName != null && !string.IsNullOrEmpty(firstName.ToString()))
+                            newDelta.TrySetPropertyValue("FirstName", firstName);
+                    }
+                    if (user.TryGetPropertyValue("LastName", out object lastName))
+                    {
+                        if (lastName != null && !string.IsNullOrEmpty(lastName.ToString()))
+                            newDelta.TrySetPropertyValue("LastName", lastName);
+                    }
+
+                    if (user.TryGetPropertyValue("AvatarUrl", out object avatarUrl))
+                    {
+                        if (avatarUrl != null && !string.IsNullOrEmpty(avatarUrl.ToString()))
+                            newDelta.TrySetPropertyValue("AvatarUrl", avatarUrl);
+                    }
+                    newDelta.Patch(existingUser);
+                }
                 await context.SaveChangesAsync();
                 return Ok(existingUser);
             }
