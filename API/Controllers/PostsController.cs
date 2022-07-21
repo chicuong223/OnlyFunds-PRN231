@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
+using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -34,10 +35,13 @@ namespace API.Controllers
 
         [EnableQuery]
         [HttpGet("{key}")]
-        public SingleResult<Post> GetByID(int key)
+        public async Task<IActionResult> GetByID([FromODataUri] int key)
         {
-            var result = repo.Posts.GetList().Where(cmt => cmt.PostID == key);
-            return SingleResult.Create(result);
+            // var result = repo.Posts.GetList().Where(cmt => cmt.PostID == key);
+            // return SingleResult.Create(result);
+            var result = await repo.Posts.GetByID(key);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [Authorize(Roles = "User")]
@@ -46,7 +50,7 @@ namespace API.Controllers
         {
             // System.Console.WriteLine(ModelState.IsValid);
             // if (!ModelState.IsValid) return BadRequest(ModelState);
-            System.Console.WriteLine(post == null);
+            // System.Console.WriteLine(post == null);
             ModelState.ClearValidationState(nameof(Post));
             try
             {
@@ -97,6 +101,7 @@ namespace API.Controllers
                     }
                 }
                 return CreatedAtAction(nameof(GetByID), new { key = result.PostID }, result);
+                // return Ok(result);
             }
             catch
             {

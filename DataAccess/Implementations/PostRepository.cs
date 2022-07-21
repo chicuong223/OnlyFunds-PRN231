@@ -63,7 +63,7 @@ namespace DataAccess.Implementations
         {
             try
             {
-                Post post = await context.Posts.SingleOrDefaultAsync(e => e.PostID == id);
+                Post post = await context.Posts.Include(post => post.Uploader).SingleOrDefaultAsync(e => e.PostID == id);
                 return post;
             }
             catch
