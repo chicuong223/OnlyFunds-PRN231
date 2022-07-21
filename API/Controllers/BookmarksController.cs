@@ -70,8 +70,8 @@ namespace API.Controllers
             if (post == null || post.Status != PostStatus.Active)
                 return BadRequest("Post not found!");
             var currentUserID = GetCurrentUserID();
-            if (BookmarkExists(bookmark.UserID, bookmark.PostID))
-                return BadRequest("User has bookmarked this comment");
+            if (await BookmarkExists(bookmark.UserID, bookmark.PostID))
+                return BadRequest("User has bookmarked this post");
             bookmark.UserID = currentUserID.Value;
             var result = await _repo.Bookmarks.Create(bookmark);
             return Created(result);
@@ -97,9 +97,9 @@ namespace API.Controllers
             return NoContent();
         }
 
-        private bool BookmarkExists(int keyUserId, int keyPostId)
+        private async Task<bool> BookmarkExists(int keyUserId, int keyPostId)
         {
-            return _repo.Bookmarks.GetBookmark(keyUserId, keyPostId) != null; ;
+            return await _repo.Bookmarks.GetBookmark(keyUserId, keyPostId) != null; ;
         }
 
         private int? GetCurrentUserID()
