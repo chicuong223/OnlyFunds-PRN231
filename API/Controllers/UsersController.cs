@@ -20,11 +20,15 @@ namespace OnlyFundsAPI.API.Controllers
         // private readonly IUserRepository userRepository;
         private readonly IRepoWrapper repo;
 
-        public UsersController(IRepoWrapper repo)
+        private OnlyFundsDBContext context;
+
+        public UsersController(IRepoWrapper repo, OnlyFundsDBContext context)
         {
             // this.userRepository = userRepository;
             this.repo = repo;
+            this.context = context;
         }
+
 
         //Get a list of users
         [EnableQuery]
@@ -75,9 +79,15 @@ namespace OnlyFundsAPI.API.Controllers
                 {
                     return NotFound();
                 }
+                object pass = "";
+                var value = user.TryGetPropertyValue("Password", out pass);
+                if (pass != null)
+                {
+                    user.TrySetPropertyValue("Password", PasswordUtils.HashString(pass.ToString()));
+                }
                 user.Patch(existingUser);
-                await repo.Users.Update(existingUser);
-                return Updated(existingUser);
+                await context.SaveChangesAsync();
+                return Ok(existingUser);
             }
             catch (Exception ex)
             {

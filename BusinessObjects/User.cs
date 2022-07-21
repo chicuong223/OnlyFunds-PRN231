@@ -20,5 +20,11 @@ namespace OnlyFundsAPI.BusinessObjects
         public ICollection<Follow> Followers { get; set; }  //who follows you
         public ICollection<Follow> Follows { get; set; }    //you follow
         public ICollection<Bookmark> Bookmarks { get; set; }
+
+
+        public override string ToString()
+        {
+            return "UserID: " + UserID + ", Password: " + Password;
+        }
     }
 }
