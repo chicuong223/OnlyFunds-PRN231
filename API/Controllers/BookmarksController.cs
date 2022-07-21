@@ -71,7 +71,7 @@ namespace API.Controllers
                 return BadRequest("Post not found!");
             var currentUserID = GetCurrentUserID();
             if (BookmarkExists(bookmark.UserID, bookmark.PostID))
-                return BadRequest("User has liked this comment");
+                return BadRequest("User has bookmarked this comment");
             bookmark.UserID = currentUserID.Value;
             var result = await _repo.Bookmarks.Create(bookmark);
             return Created(result);
