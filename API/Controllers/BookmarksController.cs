@@ -99,7 +99,7 @@ namespace API.Controllers
 
         private bool BookmarkExists(int keyUserId, int keyPostId)
         {
-            return _repo.Bookmarks.GetList().SingleOrDefault(e => e.UserID == keyUserId && e.PostID == keyPostId) != null; ;
+            return _repo.Bookmarks.GetBookmark(keyUserId, keyPostId) != null; ;
         }
 
         private int? GetCurrentUserID()
