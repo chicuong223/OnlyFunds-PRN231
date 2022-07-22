@@ -30,12 +30,12 @@ namespace DataAccess.Implementations
             return bookMark;
         }
 
-        public async Task Delete(int userID, int commentID)
+        public async Task Delete(int UserID, int PostID)
         {
             try
             {
                 var bookMark = await context.Bookmarks
-                    .SingleOrDefaultAsync(cl => cl.UserID == userID && cl.UserID == userID)
+                    .SingleOrDefaultAsync(cl => cl.PostID == PostID && cl.UserID == UserID)
                     ?? throw new ArgumentException("Bookmark not found");
                 context.Bookmarks.Remove(bookMark);
                 await context.SaveChangesAsync();
@@ -46,13 +46,13 @@ namespace DataAccess.Implementations
             }
         }
 
-        public async Task<Bookmark> GetBookmark(int userID, int commentID)
+        public async Task<Bookmark> GetBookmark(int UserID, int PostID)
         {
             Bookmark result = null;
             try
             {
                 result = await context.Bookmarks
-                    .SingleOrDefaultAsync(cl => cl.UserID == userID && cl.UserID == userID);
+                    .SingleOrDefaultAsync(cl => cl.PostID == PostID && cl.UserID == UserID);
             }
             catch
             {

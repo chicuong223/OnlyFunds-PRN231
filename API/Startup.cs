@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using OnlyFundsAPI.BusinessObjects;
@@ -135,8 +136,8 @@ namespace API
             builder.EntitySet<User>("Users");
             builder.EntitySet<Report>("Reports");
             builder.EntitySet<PostTagMap>("PostTagMaps");
-            // builder.EntitySet<Post>("Posts");
-            // builder.EntityType<Post>().HasKey(p => p.PostID);
+            builder.EntitySet<Post>("Posts");
+            builder.EntityType<Post>().HasKey(p => p.PostID);
             builder.EntityType<Follow>().HasKey(follow => new { follow.FollowerID, follow.FolloweeID });
             builder.EntityType<Bookmark>().HasKey(bookmark => new { bookmark.UserID, bookmark.PostID });
             builder.EntityType<PostLike>().HasKey(pLike => new { pLike.UserID, pLike.PostID });
@@ -144,7 +145,15 @@ namespace API
             builder.EntityType<CommentLike>().HasKey(like => new { like.UserID, like.CommentID });
             builder.EntityType<PostLike>().HasKey(like => new { like.PostID, like.UserID });
             builder.EntityType<PostTagMap>().HasKey(tagMap => new { tagMap.TagID, tagMap.PostID });
+
+            builder.EnumType<FileType>();
+            builder.EnumType<ReportTypes>();
+            builder.EnumType<ReportStatus>();
+
             return builder.GetEdmModel();
+
+            //IEdmModel model = builder.GetEdmModel();
+            //model.AddElement(fileType);
         }
     }
 }

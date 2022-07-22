@@ -260,16 +260,15 @@ namespace BusinessObjects.Migrations
 
             modelBuilder.Entity("OnlyFundsAPI.BusinessObjects.Report", b =>
                 {
-                    b.Property<int>("ReporterID")
-                        .HasColumnType("int");
+                    b.Property<int>("ReportID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("ReportID")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("ReportTime")
                         .HasColumnType("datetime2");
@@ -280,10 +279,13 @@ namespace BusinessObjects.Migrations
                     b.Property<int>("ReportedObjectID")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReporterID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.HasKey("ReporterID");
+                    b.HasKey("ReportID");
 
                     b.HasIndex("ReporterID", "ReportedObjectID", "ReportType")
                         .IsUnique();

@@ -63,7 +63,7 @@ namespace DataAccess.Implementations
         {
             try
             {
-                Post post = await context.Posts.SingleOrDefaultAsync(e => e.PostID == id);
+                Post post = await context.Posts.Include(post => post.Uploader).SingleOrDefaultAsync(e => e.PostID == id);
                 return post;
             }
             catch
@@ -74,14 +74,16 @@ namespace DataAccess.Implementations
 
         public IQueryable<Post> GetList()
         {
+            IQueryable<Post> result;
             try
             {
-                return context.Posts.AsQueryable();
+                result = context.Posts.AsQueryable();
             }
             catch
             {
                 throw;
             }
+            return result;
         }
 
         public async Task<Post> Update(Post post)

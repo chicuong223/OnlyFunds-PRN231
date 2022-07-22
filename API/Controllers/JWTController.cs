@@ -68,6 +68,7 @@ namespace OnlyFundsAPI.API.Controllers
                 new Claim("UserId", user.UserID.ToString()),
                 new Claim("Email", user.Email),
                 new Claim("Username", user.Username),
+                new Claim("AvatarUrl", user.AvatarUrl),
                 new Claim(ClaimTypes.Role, role)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));

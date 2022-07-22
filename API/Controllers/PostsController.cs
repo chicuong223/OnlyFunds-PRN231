@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
+using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Results;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -25,7 +26,7 @@ namespace API.Controllers
         }
 
         [EnableQuery]
-        [HttpGet]
+        [HttpGet("list")]
         public IActionResult Get()
         {
             var result = repo.Posts.GetList();
@@ -34,10 +35,13 @@ namespace API.Controllers
 
         [EnableQuery]
         [HttpGet("{key}")]
-        public SingleResult<Post> GetByID(int key)
+        public async Task<IActionResult> GetByID([FromODataUri] int key)
         {
-            var result = repo.Posts.GetList().Where(cmt => cmt.PostID == key);
-            return SingleResult.Create(result);
+            // var result = repo.Posts.GetList().Where(cmt => cmt.PostID == key);
+            // return SingleResult.Create(result);
+            var result = await repo.Posts.GetByID(key);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [Authorize(Roles = "User")]
@@ -46,7 +50,7 @@ namespace API.Controllers
         {
             // System.Console.WriteLine(ModelState.IsValid);
             // if (!ModelState.IsValid) return BadRequest(ModelState);
-            System.Console.WriteLine(post == null);
+            // System.Console.WriteLine(post == null);
             ModelState.ClearValidationState(nameof(Post));
             try
             {
@@ -55,7 +59,7 @@ namespace API.Controllers
                 var currentUser = await repo.Users.GetUserByID(currentUserID.Value);
                 if (currentUser.Banned || !currentUser.Active) return Unauthorized("Action not allowed!");
                 post.UploaderID = currentUserID.Value;
-                post.UploadTime = DateTime.Now;
+                // post.UploadTime = DateTime.Now;
                 if (!TryValidateModel(post)) return BadRequest();
                 var newPost = new Post
                 {
@@ -97,6 +101,7 @@ namespace API.Controllers
                     }
                 }
                 return CreatedAtAction(nameof(GetByID), new { key = result.PostID }, result);
+                // return Ok(result);
             }
             catch
             {
@@ -106,7 +111,7 @@ namespace API.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPatch("{key}")]
-        public async Task<IActionResult> Patch(int key, [FromBody] Delta<Post> post)
+        public async Task<IActionResult> Update(int key, [FromBody] Delta<Post> post)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
@@ -128,12 +133,12 @@ namespace API.Controllers
 
         [HttpDelete("{key}")]
         [Authorize]
-        public async Task<IActionResult> Delete(int key)
+        public async Task<IActionResult> Remove(int key)
         {
             try
             {
                 var post = await repo.Posts.GetByID(key);
-                if (post == null) return NotFound();
+                if (post == null || post.Status != PostStatus.Active) return NotFound();
 
                 //if current user is not admin
                 //check if current user is the uploader of the post

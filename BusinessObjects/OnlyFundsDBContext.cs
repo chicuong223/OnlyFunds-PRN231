@@ -218,7 +218,7 @@ namespace OnlyFundsAPI.BusinessObjects
 
             builder.Entity<Report>(entity =>
             {
-                entity.HasKey(report => report.ReporterID);
+                entity.HasKey(report => report.ReportID);
                 entity.HasIndex(report => new { report.ReporterID, report.ReportedObjectID, report.ReportType })
                     .IsUnique();
                 entity.Property(report => report.ReportedObjectID)

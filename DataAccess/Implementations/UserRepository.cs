@@ -108,7 +108,6 @@ namespace OnlyFundsAPI.DataAccess.Implementations
                 {
                     throw new ArgumentException("Email is used!");
                 }
-                user.Password = PasswordUtils.HashString(user.Password);
                 context.Entry(user).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
