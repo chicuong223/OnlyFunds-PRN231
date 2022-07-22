@@ -41,26 +41,27 @@ namespace API.Controllers
 
         // PUT: api/Reports/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        public async Task<IActionResult> Patch(int key, Delta<Report> report)
+        public async Task<IActionResult> Patch(int key, [FromBody]Delta<Report> report)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            //if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            object deltaId;
-            bool foundId = report.TryGetPropertyValue("ReportID", out deltaId);
-            if (!foundId) return BadRequest();
-            int id;
-            bool tryParse = int.TryParse(deltaId.ToString(), out id);
-            if (!tryParse) return BadRequest();
-            if (key != id)
-            {
-                return BadRequest();
-            }
+            //object deltaId;
+            //bool foundId = report.TryGetPropertyValue("ReportID", out deltaId);
+            //if (!foundId) return BadRequest();
+            //int id;
+            //bool tryParse = int.TryParse(deltaId.ToString(), out id);
+            //if (!tryParse) return BadRequest();
+            //if (key != id)
+            //{
+            //    return BadRequest();
+            //}
             try
             {
                 var existingReport = await repo.Reports.GetByID(key);
-                if (existingReport == null || existingReport.Status != ReportStatus.Unresolved) return BadRequest("Comment not found!");
-                var currentUserID = GetCurrentUserID();
-                if (existingReport.ReporterID != currentUserID) return Unauthorized("Modifying other users' comments is not allowed!");
+                if (existingReport == null/* || existingReport.Status != ReportStatus.Unresolved*/) 
+                    return BadRequest("Report not found!");
+                //var currentUserID = GetCurrentUserID();
+                //if (existingReport.ReporterID != currentUserID) return Unauthorized("Modifying other users' comments is not allowed!");
                 report.Patch(existingReport);
                 var result = await repo.Reports.Update(existingReport);
                 return Updated(result);
